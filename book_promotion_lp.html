@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>話せる書籍プロモーション - Talkport</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Fixed CTA Button */
+        .fixed-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #16a34a, #22c55e, #4ade80);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .fixed-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(34, 197, 94, 0.5);
+            background: linear-gradient(45deg, #15803d, #16a34a, #22c55e);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6); }
+            100% { box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4); }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(5, 150, 105, 0.2) 0%, transparent 50%);
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        .hero-feature h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #16a34a, #22c55e, #4ade80);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            margin-top: 30px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+            background: linear-gradient(45deg, #15803d, #16a34a, #22c55e);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            color: #1a1a1a;
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #10b981, #059669, #047857);
+            border-radius: 2px;
+        }
+
+        /* Overview Section */
+        .overview {
+            background: #ffffff;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .step:hover::before {
+            opacity: 1;
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(45deg, #10b981, #059669, #047857);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            line-height: 70px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step p {
+            color: #666666;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            background: #f8f9fa;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .benefit-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .benefit-card:hover::before {
+            opacity: 1;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .benefit-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefit-card p {
+            color: #666666;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Pricing Table */
+        .pricing {
+            background: #ffffff;
+        }
+
+        .pricing-table {
+            overflow-x: auto;
+            margin-top: 60px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: linear-gradient(45deg, #10b981, #059669, #047857);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        td {
+            color: #1a1a1a;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Simulation Section */
+        .simulation {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            color: white;
+        }
+
+        .simulation-content {
+            text-align: center;
+        }
+
+        .simulation .section-title {
+            color: white;
+        }
+
+        .simulation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .simulation-card {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .simulation-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .simulation-card .amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        /* Trust Section */
+        .trust {
+            background: #f8f9fa;
+        }
+
+        .trust-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .trust-stat {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .trust-stat .number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #10b981;
+            display: block;
+        }
+
+        .trust-stat .label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* FAQ Section */
+        .faq {
+            background: #ffffff;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            background: #10b981;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #059669;
+        }
+
+        .faq-answer {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: none;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .contact .section-title {
+            color: white;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .contact-item {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-item a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+
+            .fixed-cta {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-fadeInUp">
+                <h1>📚 話せる書籍プロモーション</h1>
+                <p class="hero-subtitle">著者の魅力を最大限に引き出し、販売数・読者の熱量・SNS拡散力をすべて向上</p>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <h3>🎥 45分</h3>
+                        <p>生配信番組</p>
+                    </div>
+                    <div class="hero-feature">
+                        <h3>💬 120分</h3>
+                        <p>オンライントーク</p>
+                    </div>
+                    <div class="hero-feature">
+                        <h3>💰 実質無料</h3>
+                        <p>制作費回収可能</p>
+                    </div>
+                </div>
+                
+                <a href="#contact" class="cta-button">無料相談を申し込む</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="section overview">
+        <div class="container">
+            <h2 class="section-title">📚 企画概要</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>🎥 著者×芸人MCでの45分番組</h3>
+                    <p>書籍の読みどころ、制作秘話、テーマトークなどを発信。配信は弊社にて完全制作（芸人MC・台本・演出・配信代行）</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>💬 書籍購入者限定オンライン特典会</h3>
+                    <p>書籍購入で著者との1対1オンライントークに参加。配送・決済・抽選・運営すべてTalkport上で完結</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="section benefits">
+        <div class="container">
+            <h2 class="section-title">💡 実現できること</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="benefit-icon">🧠</span>
+                    <h3>認知拡大 × ファン化</h3>
+                    <p>番組で視聴者を惹きつけ、その場で購入＆会話へ誘導</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">💸</span>
+                    <h3>高単価商品化</h3>
+                    <p>書籍5冊セット購入＋通話3分で単価¥11,000の回収設計</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">🎯</span>
+                    <h3>実質無料導入</h3>
+                    <p>制作費10万円を、販売のみで十分にペイ可能</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">📈</span>
+                    <h3>高還元率（75%）</h3>
+                    <p>出版社様の収益性を最大限確保</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">🔁</span>
+                    <h3>リピート性・拡散性</h3>
+                    <p>抽選通話／チェキ特典でSNS拡散も期待</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="benefit-icon">🎬</span>
+                    <h3>完全代行サービス</h3>
+                    <p>MCなど面倒な作業は全てこちらで代行</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Table -->
+    <section class="section pricing">
+        <div class="container">
+            <h2 class="section-title">💬 購入特典設計例</h2>
+            <div class="pricing-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>購入形態</th>
+                            <th>通話時間</th>
+                            <th>特典内容</th>
+                            <th>価格（税込）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1冊券</td>
+                            <td>30秒</td>
+                            <td>通話のみ</td>
+                            <td>¥2,200</td>
+                        </tr>
+                        <tr>
+                            <td>3冊券</td>
+                            <td>90秒</td>
+                            <td>通話＋ランチェキ1枚</td>
+                            <td>¥6,600</td>
+                        </tr>
+                        <tr>
+                            <td>5冊券</td>
+                            <td>3分</td>
+                            <td>通話＋ランチェキ1枚</td>
+                            <td>¥11,000</td>
+                        </tr>
+                        <tr>
+                            <td>抽選枠（1冊購入で応募）</td>
+                            <td>2分（5名）</td>
+                            <td>通話のみ</td>
+                            <td>¥2,200</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulation Section -->
+    <section class="section simulation">
+        <div class="container">
+            <div class="simulation-content">
+                <h2 class="section-title">🧾 実売シミュレーション</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 30px;">2時間の特典会を実施し、枠がすべて完売した場合：</p>
+                
+                <div class="simulation-grid">
+                    <div class="simulation-card">
+                        <h3>総売上</h3>
+                        <div class="amount">約36万円</div>
+                        <p>（税込）</p>
+                    </div>
+                    <div class="simulation-card">
+                        <h3>Talkport還元率</h3>
+                        <div class="amount">75%</div>
+                        <p>業界最高水準</p>
+                    </div>
+                    <div class="simulation-card">
+                        <h3>出版社様収入</h3>
+                        <div class="amount">約27万円</div>
+                        <p>手元に残る金額</p>
+                    </div>
+                </div>
+                
+                <p style="font-size: 1.1rem; margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    📌 書籍あたりの出版社取り分は平均75％。<br>
+                    取次・書店を介さないため、<strong>通常販売よりも遥かに高い粗利率</strong>で運用が可能です。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="section trust">
+        <div class="container">
+            <h2 class="section-title">🚀 Talkportの実績と信頼性</h2>
+            <div class="trust-stats">
+                <div class="trust-stat">
+                    <span class="number">2,000+</span>
+                    <div class="label">導入企業・事務所</div>
+                </div>
+                <div class="trust-stat">
+                    <span class="number">15,000+</span>
+                    <div class="label">登録配信者数</div>
+                </div>
+                <div class="trust-stat">
+                    <span class="number">100万+</span>
+                    <div class="label">累計通話数</div>
+                </div>
+                <div class="trust-stat">
+                    <span class="number">★4.5</span>
+                    <div class="label">アプリ評価</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq">
+        <div class="container">
+            <h2 class="section-title">💬 よくある質問</h2>
+            <div class="faq-item">
+                <div class="faq-question">Q. Talkportを使ったことがありません。</div>
+                <div class="faq-answer">弊社がアカウント設定から販売設計まですべて代行いたします。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q. 書籍は通常の取次・書店販売でもいいですか？</div>
+                <div class="faq-answer">販売形態は自由ですが、EC（直販）連動が最も利益が出やすい構成です。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q. 特典会の当落・運営などの対応が不安です。</div>
+                <div class="faq-answer">Talkportのプラットフォーム上で抽選・通知・通話・配送すべて完結します。</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">📩 お問い合わせ・ご相談</h2>
+            <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 15px; margin-bottom: 40px;">
+                <h3 style="font-size: 2rem; margin-bottom: 20px; color: #ffd700;">実施費用：¥100,000（税別）〜</h3>
+                <p style="font-size: 1.2rem;">導入企業募集中｜お気軽にご相談ください！</p>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>📧 メール</h3>
+                    <p><a href="mailto:kamina@theport.inc">kamina@theport.inc</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>📞 担当直通</h3>
+                    <p><a href="tel:080-1224-2941">080-1224-2941</a>（神名）</p>
+                </div>
+                <div class="contact-item">
+                    <h3>💬 無料相談</h3>
+                    <p><a href="https://timerex.net/s/port/c58cd655" target="_blank">担当者と相談する</a></p>
+                </div>
+            </div>
+            
+            <a href="https://timerex.net/s/port/c58cd655" target="_blank" class="cta-button" style="margin-top: 40px;">今すぐ無料相談を予約</a>
+        </div>
+    </section>
+
+    <!-- Fixed CTA Button -->
+    <a href="https://timerex.net/s/port/c58cd655" target="_blank" class="fixed-cta">
+        💬 今すぐ無料相談
+    </a>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isVisible = answer.style.display === 'block';
+                
+                // Hide all answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.
