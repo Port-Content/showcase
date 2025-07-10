@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC SupPort - ファンクラブ運営の"困った"をまるごと解決</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="90" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .hero h3 {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Problems Section */
+        .problems {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #e74c3c;
+        }
+
+        .problems-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+        }
+
+        .problems-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .problems-table th {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        /* Enhanced readability styles */
+        .problems-table td {
+            padding: 30px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            vertical-align: top;
+        }
+
+        .problems-table td:first-child {
+            background: #fef9f9;
+            border-right: 3px solid #e74c3c;
+            font-weight: 500;
+        }
+
+        .problems-table td:last-child {
+            background: #f0fff4;
+            border-right: 3px solid #27ae60;
+        }
+
+        .problems-table tr:hover td:first-child {
+            background: #fed7d7;
+        }
+
+        .problems-table tr:hover td:last-child {
+            background: #dcf4e4;
+        }
+
+        .problem-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .solution-arrow {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* What is FC SupPort */
+        .about {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .about-content {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            color: #e74c3c;
+            margin-bottom: 30px;
+        }
+
+        .about-content p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* Package Details */
+        .package {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .package-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+        }
+
+        .package-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .package-table th {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+        }
+
+        .package-table td {
+            padding: 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1.1rem;
+        }
+
+        .package-price {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 40px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Revenue Model */
+        .revenue {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .revenue-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+        }
+
+        .revenue-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .revenue-table th {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.1rem;
+        }
+
+        .revenue-table td {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .revenue-table .total-row {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .profit-summary {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .profit-summary h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .profit-summary p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .profit-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Benefits */
+        .benefits {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-card h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Track Record */
+        .track-record {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 80px 0;
+        }
+
+        .track-record-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .track-record-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .track-record-card h3 {
+            color: #e74c3c;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* FAQ */
+        .faq {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        }
+
+        .faq-answer {
+            padding: 25px;
+            background: #f8f9fa;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .cta p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+        }
+
+        /* Fixed CTA Button */
+        .fixed-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f618d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(52, 152, 219, 0.6);
+        }
+
+        .cta-button-large {
+            padding: 25px 60px;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .problems-table th,
+            .problems-table td {
+                padding: 15px;
+                font-size: 1rem;
+            }
+
+            .package-table th,
+            .package-table td {
+                padding: 15px;
+                font-size: 1rem;
+            }
+
+            .revenue-table th,
+            .revenue-table td {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .fixed-cta {
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">FC SupPort</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🎥 月イチ配信 × オンライン特典会</h1>
+                <h2>ファンクラブ運営の"困った"をまるごと解決</h2>
+                <h3>― FC SupPort ―</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="problems">
+        <div class="container">
+            <h2 class="section-title">👀 こんなお悩みありませんか？</h2>
+            <div class="problems-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>FC運営の悩み</th>
+                            <th>FC SupPortが解決できること</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="problem-icon">🎥</span>配信や通話企画をしたいが、<strong>運営が複雑すぎる</strong></td>
+                            <td><span class="solution-arrow">→</span>配信・通話・インターバル管理・配送まで<strong>全部代行</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="problem-icon">📦</span><strong>特典グッズ（ステッカー等）の発送が毎回手間</strong></td>
+                            <td><span class="solution-arrow">→</span>特典の梱包・配送も<strong>Talkportが一括対応</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="problem-icon">📉</span>通話施策や抽選企画をしても、<strong>黒字になるか不安…</strong></td>
+                            <td><span class="solution-arrow">→</span>黒字モデル提示済。<strong>制作費10万円でも利益が出る設計</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="problem-icon">🗓️</span>コンテンツ更新の<strong>企画がネタ切れ気味…</strong></td>
+                            <td><span class="solution-arrow">→</span>月1回の<strong>番組＋通話定型施策</strong>で、安定運用が可能</td>
+                        </tr>
+                        <tr>
+                            <td><span class="problem-icon">🧑‍💻</span>人手不足で<strong>毎回同じ担当者が疲弊している…</strong></td>
+                            <td><span class="solution-arrow">→</span>MC・構成・進行も<strong>プロが伴走</strong>。現場負担を極小化</td>
+                        </tr>
+                        <tr>
+                            <td><span class="problem-icon">🔄</span><strong>毎回ゼロから企画するのが非効率…</strong></td>
+                            <td><span class="solution-arrow">→</span>決まった構成の"型"を使い回せるから<strong>省エネで継続可</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <h2>✅ FC SupPort とは？</h2>
+                <p>ファンとの接点を"濃く"しながら、<br>運営の負担は"軽く"する、<strong>月イチ定型パッケージ。</strong></p>
+                <p>通話施策・番組配信・抽選イベント・配送まで<strong>まるっと代行</strong>します。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="package">
+        <div class="container">
+            <h2 class="section-title">📦 パッケージ内容</h2>
+            <div class="package-price">10万円（税抜）</div>
+            <div class="package-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>内容</th>
+                            <th>詳細</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🎤 配信番組</td>
+                            <td>45分／Zoom or スタジオ収録（MC付き対応可）</td>
+                        </tr>
+                        <tr>
+                            <td>📞 オンライン特典会</td>
+                            <td>90分／1対1通話（インターバル自動管理付き）</td>
+                        </tr>
+                        <tr>
+                            <td>🧾 レポート納品</td>
+                            <td>購入者リスト・通話実施レポート・出荷リスト提出</td>
+                        </tr>
+                        <tr>
+                            <td>🚚 配送代行</td>
+                            <td>ステッカーなどの梱包・発送もTalkportが対応</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="revenue">
+        <div class="container">
+            <h2 class="section-title">💰 黒字が見える収支モデル（90分特典会）</h2>
+            <div class="revenue-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>券種</th>
+                            <th>条件</th>
+                            <th>枠数</th>
+                            <th>単価</th>
+                            <th>売上</th>
+                            <th>還元（70%）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2分券</td>
+                            <td>ファントーク2分枠</td>
+                            <td>24枠</td>
+                            <td>¥4,000</td>
+                            <td>¥96,000</td>
+                            <td>¥67,200</td>
+                        </tr>
+                        <tr>
+                            <td>1分券</td>
+                            <td>ファントーク1分枠</td>
+                            <td>15枠</td>
+                            <td>¥2,000</td>
+                            <td>¥30,000</td>
+                            <td>¥21,000</td>
+                        </tr>
+                        <tr>
+                            <td>抽選券</td>
+                            <td>900円×100名販売（当選5名×3分）</td>
+                            <td>5枠</td>
+                            <td>¥900 × 100</td>
+                            <td>¥90,000</td>
+                            <td>¥63,000</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>合計</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>¥216,000</strong></td>
+                            <td><strong>¥151,200</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="profit-summary">
+                <h3>収支計算</h3>
+                <p>制作費：¥100,000（税抜）</p>
+                <p>売上還元：¥151,200</p>
+                <div class="profit-amount">実質黒字：＋¥51,200</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">🚀 導入メリットまとめ</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>💸 還元率70％で仕入れリスクなし</h3>
+                    <p>高い還元率により、確実に利益を確保できます。</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>💬 通話施策の設計・実施を完全サポート</h3>
+                    <p>企画から実施まで、プロがトータルサポートします。</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>📦 ステッカーなどのグッズ配送も代行</h3>
+                    <p>梱包・発送業務も全てお任せください。</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>🎤 MC・構成・番組制作もワンストップで提供</h3>
+                    <p>番組制作に必要な全ての要素を一括提供。</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>🔁 "型"として継続活用できる再現性の高い施策</h3>
+                    <p>一度導入すれば、継続的に活用できる仕組みです。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="track-record">
+        <div class="container">
+            <h2 class="section-title">✅ 導入実績</h2>
+            <div class="track-record-grid">
+                <div class="track-record-card">
+                    <h3>💼 Talkport</h3>
+                    <p>2,000事務所以上導入済み</p>
+                </div>
+                <div class="track-record-card">
+                    <h3>⭐ App Storeレビュー</h3>
+                    <p>★4.5以上（3,000件超）</p>
+                </div>
+                <div class="track-record-card">
+                    <h3>🧾 一括管理</h3>
+                    <p>配信・通話・物流まで<br>ラク＆安全</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">❓ よくあるご質問</h2>
+            <div class="faq-item">
+                <div class="faq-question">Q1. 特典会は何を準備すればいいですか？</div>
+                <div class="faq-answer">A. タレントのスマホ1台があればOK。通話は自動開始・自動終了。特典の発送も当社で代行します。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q2. 配信は自社でも可能ですか？</div>
+                <div class="faq-answer">A. Zoomを使った遠隔配信、または弊社スタジオ収録も選択可能。MCや演出もご相談ください。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q3. 売上はどのくらい見込めますか？</div>
+                <div class="faq-answer">A. 約21万円売上 → 約15万円還元 → 制作費10万円でも黒字です。<br>※構成例：2分券×24、1分券×15、抽選券100枚</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q4. 初めてでも大丈夫？</div>
+                <div class="faq-answer">A. 完全代行パッケージなので初回でも安心。CS・MC・構成・物流まで全てTalkportで対応可能です。</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>📩 お問い合わせ・商談予約はこちら</h2>
+            <p>以下のリンクから空いている日程をご予約いただけます。</p>
+            <a href="https://timerex.net/s/port/c58cd655" class="cta-button cta-button-large">話を聞いてみる</a>
+        </div>
+    </section>
+
+    <div class="fixed-cta">
+        <a href="https://timerex.net/s/port/c58cd655" class="cta-button">話を聞いてみる</a>
+    </div>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isVisible = answer.style.display === 'block';
+                
+                // Close all other answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.style.display = 'none';
+                });
+                
+                // Toggle current answer
+                answer.style.display = isVisible ? 'none' : 'block';
+            });
+        });
+
+        // Add scroll effect to fixed CTA button
+        window.addEventListener('scroll', function() {
+            const fixedCta = document.querySelector('.fixed-cta');
+            if (window.scrollY > 100) {
+                fixedCta.style.opacity = '1';
+            } else {
+                fixedCta.style.opacity = '0.8';
+            }
+        });
+    </script>
+</body>
+</html>
