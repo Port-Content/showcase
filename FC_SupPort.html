@@ -1,0 +1,138 @@
+<!-- CTA ボタンのスタイル変更部分 -->
+<style>
+    /* 既存のスタイルに追加または修正 */
+    .btn-blue {
+        display: inline-block;
+        padding: 15px 40px;
+        background-color: #2b6cb0; /* 青色 */
+        color: var(--light);
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 15px rgba(43, 108, 176, 0.3); /* 青色の影 */
+    }
+    
+    .btn-blue:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(43, 108, 176, 0.4);
+        background-color: #2c5282; /* ホバー時の濃い青 */
+    }
+    
+    /* 固定CTA用の青ボタン */
+    .fixed-cta .btn-blue {
+        display: flex;
+        align-items: center;
+        padding: 15px 30px;
+        box-shadow: 0 6px 20px rgba(43, 108, 176, 0.4);
+    }
+    
+    .fixed-cta .btn-blue:hover {
+        transform: translateY(-5px) scale(1.05);
+    }
+</style>
+
+<!-- CTA セクションのボタン変更 -->
+<section class="cta">
+    <div class="container">
+        <h2 class="cta-title">FC SupPort で今すぐファンクラブを活性化</h2>
+        <p class="cta-subtitle">お問い合わせ・打合予約はこちら</p>
+        <a href="https://timerex.net/s/port/c58cd655" class="btn-blue" target="_blank">
+            <i class="fas fa-comment"></i> 話をきいてみる
+        </a>
+    </div>
+</section>
+
+<!-- 固定CTA ボタン変更 -->
+<div class="fixed-cta">
+    <a href="https://timerex.net/s/port/c58cd655" class="btn-blue" target="_blank">
+        <i class="fas fa-comment btn-icon"></i> 話をきいてみる
+    </a>
+</div>
+<p><strong>Zoomを使った遠隔配信、または弊社スタジオ収録も選択可能。</strong></p>
+                        <p>MCや演出もご相談ください。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">売上はどのくらい見込めますか？</div>
+                    <div class="faq-answer">
+                        <p><strong>約21万円売上 → 約15万円還元 → 制作費10万円（税別）でも黒字です。</strong></p>
+                        <p>※構成例：2分券×24、1分券×15、抽選券100枚</p>
+                        <p>※グループの場合は人数分の収益増が見込めます</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">初めてでも大丈夫？</div>
+                    <div class="faq-answer">
+                        <p><strong>完全代行パッケージなので初回でも安心。</strong></p>
+                        <p>CS・MC・構成・物流まで全てTalkportで対応可能です。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title">FC SupPort で今すぐファンクラブを活性化</h2>
+            <p class="cta-subtitle">お問い合わせ・打合予約はこちら</p>
+            <a href="https://timerex.net/s/port/c58cd655" class="btn-blue" target="_blank">
+                <i class="fas fa-comment"></i> 話をきいてみる
+            </a>
+        </div>
+    </section>
+
+    <!-- Fixed CTA Button -->
+    <div class="fixed-cta">
+        <a href="https://timerex.net/s/port/c58cd655" class="btn-blue" target="_blank">
+            <i class="fas fa-comment btn-icon"></i> 話をきいてみる
+        </a>
+    </div>
+
+    <script>
+        // Accordion functionality for FAQ
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    }
+                    
+                    question.classList.toggle('active');
+                });
+            });
+            
+            // Open the first FAQ by default
+            if (faqQuestions.length > 0) {
+                const firstAnswer = faqQuestions[0].nextElementSibling;
+                firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 'px';
+                faqQuestions[0].classList.add('active');
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
