@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バラッチェ出演者募集 | サイバーパンク</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .circuit-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 98px,
+                    #00ff41 100px,
+                    #00ff41 102px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 98px,
+                    #ff1744 100px,
+                    #ff1744 102px
+                );
+            animation: circuit-flow 10s linear infinite;
+        }
+        
+        @keyframes circuit-flow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+        
+        .header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #00ff41;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+            animation: header-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes header-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+        
+        .header a:hover {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            transform: scale(1.05);
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #ffffff;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(255, 23, 68, 0.1) 100%);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #00ff41, #ff1744, #00ff41);
+            border-radius: 15px;
+            z-index: -1;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .card:hover::before {
+            opacity: 0.3;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.3);
+            border-color: #00ff41;
+        }
+        
+        .card.active {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.5);
+            border-color: #00ff41;
+        }
+        
+        .card.active::before {
+            opacity: 0.4;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #00ff41, #ff1744);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #000;
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .card-preview {
+            font-size: 0.9rem;
+            color: #cccccc;
+            line-height: 1.4;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: modal-fade-in 0.3s ease;
+        }
+        
+        @keyframes modal-fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+            border: 2px solid #00ff41;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.3);
+            animation: modal-slide-in 0.5s ease;
+        }
+        
+        @keyframes modal-slide-in {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #00ff41, #ff1744);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #000;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ff41;
+            text-shadow: 0 0 15px #00ff41;
+        }
+        
+        .modal-body {
+            line-height: 1.8;
+            color: #ffffff;
+        }
+        
+        .modal-body h3 {
+            color: #ff1744;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+        
+        .modal-body ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .modal-body li {
+            margin: 0.5rem 0;
+        }
+        
+        .modal-body a {
+            color: #00ff41;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-body a:hover {
+            color: #ff1744;
+            text-shadow: 0 0 10px #ff1744;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ff1744;
+            transform: scale(1.2);
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            border: 2px solid #ff1744;
+            margin-top: 3rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .cta-btn-primary {
+            padding: 1.5rem 4rem;
+            background: linear-gradient(45deg, #00ff41, #32ff7e);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1.3rem;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 65, 0.5),
+                0 0 60px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .cta-btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .cta-btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .cta-btn-primary:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 65, 0.8),
+                0 0 100px rgba(0, 255, 65, 0.4),
+                0 15px 40px rgba(0, 255, 65, 0.6);
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 50px rgba(0, 255, 65, 0.8),
+                    0 0 100px rgba(0, 255, 65, 0.4),
+                    0 15px 40px rgba(0, 255, 65, 0.6);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 70px rgba(0, 255, 65, 1),
+                    0 0 120px rgba(0, 255, 65, 0.6),
+                    0 20px 50px rgba(0, 255, 65, 0.8);
+            }
+        }
+        
+        .cta-btn-secondary {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(45deg, #ff1744, #ff4569);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.4);
+            border: 2px solid rgba(255, 23, 68, 0.5);
+        }
+        
+        .cta-btn-secondary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+            background: linear-gradient(45deg, #ff4569, #ff1744);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .modal-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="circuit-lines"></div>
+    </div>
+    
+    <header class="header">
+        <h1>バラッチェ出演者募集</h1>
+        <p>バラエティの登竜門</p>
+        <div style="margin-top: 1rem;">
+            <a href="https://www.youtube.com/@Varattche" target="_blank" style="color: #ff1744; text-decoration: none; font-size: 1.1rem; transition: all 0.3s ease; position: relative; z-index: 1;">
+                🎥 YouTubeチャンネルを見る
+            </a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card-grid">
+            <div class="card" data-modal="modal1">
+                <div class="card-header">
+                    <div class="card-icon">01</div>
+                    <div class="card-title">バラッチェとは？</div>
+                </div>
+                <div class="card-preview">
+                    ジャンルの垣根を超えたゲストをお招きし、視聴者参加型でお届けするYouTube Live配信のバラエティ番組...
+                </div>
+            </div>
+            
+            <div class="card" data-modal="modal2">
+                <div class="card-header">
+                    <div class="card-icon">02</div>
+                    <div class="card-title">出演のメリット</div>
+                </div>
+                <div class="card-preview">
+                    ファン以外にもあなたの魅力が届く"番組出演体験"、自由なPR、限定オンライントーク...
+                </div>
+            </div>
+            
+            <div class="card" data-modal="modal3">
+                <div class="card-header">
+                    <div class="card-icon">03</div>
+                    <div class="card-title">出演条件・スケジュール</div>
+                </div>
+                <div class="card-preview">
+                    ジャンル自由、拘束時間19:30〜22:45、PR目的の出演（ギャランティ無し）...
+                </div>
+            </div>
+            
+            <div class="card" data-modal="modal4">
+                <div class="card-header">
+                    <div class="card-icon">04</div>
+                    <div class="card-title">Talkportについて</div>
+                </div>
+                <div class="card-preview">
+                    番組終了直後に、ファンと1対1でトークできる時間（20分）をご用意...
+                </div>
+            </div>
+            
+            <div class="card" data-modal="modal5">
+                <div class="card-header">
+                    <div class="card-icon">05</div>
+                    <div class="card-title">会場・収録環境</div>
+                </div>
+                <div class="card-preview">
+                    ワロップ放送局（押上駅徒歩2分）、お客様の観覧はありません...
+                </div>
+            </div>
+            
+            <div class="card" data-modal="modal6">
+                <div class="card-header">
+                    <div class="card-icon">06</div>
+                    <div class="card-title">応募方法・ご相談</div>
+                </div>
+                <div class="card-preview">
+                    出演エントリーフォーム、Zoomでのご相談予約、まずは情報収集としてもOK...
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2 style="color: #ff1744; font-family: 'Orbitron', monospace; margin-bottom: 1rem;">今すぐアクション</h2>
+            <p>未来のエンターテインメントに参加しよう</p>
+            <div class="cta-buttons">
+                <a href="https://forms.gle/zcsrMD6HQGhHcSyu5" class="cta-btn-primary">出演エントリー</a>
+                <a href="https://timerex.net/s/port/2a60df18" class="cta-btn-secondary">相談予約</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 1 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">01</div>
+                <div class="modal-title">バラッチェとは？</div>
+            </div>
+            <div class="modal-body">
+                <p>アーティスト・俳優・Vtuberなど、ジャンルの垣根を超えたゲストをお招きし、視聴者参加型でお届けする <strong>YouTube Live配信のバラエティ番組</strong>です。</p>
+                <p>台本のないトーク、即興企画、PRタイムなど盛りだくさん！</p>
+                <h3>公式チャンネル</h3>
+                <p>🎥 <a href="https://www.youtube.com/@Varattche" target="_blank">バラッチェ公式YouTubeチャンネル</a></p>
+                <p>📱 <a href="https://x.com/varattche_live" target="_blank">公式X（旧Twitter）はこちら</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 2 -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">02</div>
+                <div class="modal-title">出演のメリット</div>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>ファン以外にもあなたの魅力が届く"番組出演体験"</li>
+                    <li>番組内で <strong>自身の出演情報・作品などを自由にPR可能！</strong></li>
+                    <li>番組終了直後に <strong>Talkportで1対1の限定オンライントーク</strong>あり（20分）</li>
+                    <li>番組アーカイブが残るため、後から見た人にも届く</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 3 -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">03</div>
+                <div class="modal-title">出演条件・スケジュール</div>
+            </div>
+            <div class="modal-body">
+                <h3>出演条件</h3>
+                <p><strong>ジャンル自由：俳優／アーティスト／Vtuber／クリエイター etc.</strong></p>
+                
+                <h3>スケジュール</h3>
+                <p><strong>拘束時間：19:30〜22:45（番組：20:30〜21:45）</strong></p>
+                <ul>
+                    <li>20:10〜場当たり・マイクテスト</li>
+                    <li>出演枠：約20〜30分（1名あたり）</li>
+                    <li>終了後：Talkportで20分間のオンライントーク実施</li>
+                </ul>
+                
+                <h3>その他</h3>
+                <p><strong>PR目的の出演（ギャランティ無し）</strong></p>
+                <ul>
+                    <li>交通費自己負担</li>
+                    <li>自メイクでのご対応をお願いします</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 4 -->
+    <div id="modal4" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">04</div>
+                <div class="modal-title">Talkportについて</div>
+            </div>
+            <div class="modal-body">
+                <p>番組終了直後に、<strong>ファンと1対1でトークできる時間（20分）</strong>をご用意しています。</p>
+                <p>使用ツールはTalkport（要アカウント）。収益はご本人に還元されます。</p>
+                
+                <h3>特徴</h3>
+                <ul>
+                    <li><strong>価格・分数などは自由に設定可能</strong></li>
+                    <li>スマホ1台で簡単に対応可</li>
+                    <li>特典会が苦手な方でも"会話のみ"で参加できます</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 5 -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">05</div>
+                <div class="modal-title">会場・収録環境</div>
+            </div>
+            <div class="modal-body">
+                <h3>会場</h3>
+                <p>📍 <strong>ワロップ放送局（押上駅徒歩2分）</strong></p>
+                <p>〒130-0002 東京都墨田区業平4丁目16-6</p>
+                <p><a href="https://www.wallop.co.jp/access/" target="_blank">https://www.wallop.co.jp/access/</a></p>
+                
+                <h3>環境</h3>
+                <ul>
+                    <li>お客様の観覧はありません</li>
+                    <li>控室・待機スペースあり</li>
+                    <li>番組収録は基本3階スタジオにて行います</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal 6 -->
+    <div id="modal6" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">06</div>
+                <div class="modal-title">応募方法・ご相談</div>
+            </div>
+            <div class="modal-body">
+                <h3>応募・相談方法</h3>
+                <p>📥 <a href="https://forms.gle/zcsrMD6HQGhHcSyu5" target="_blank">出演エントリーフォーム</a></p>
+                <p>📅 <a href="https://timerex.net/s/port/2a60df18" target="_blank">Zoomでのご相談予約はこちら（TimeRex）</a></p>
+                
+                <h3>お気軽にご相談ください</h3>
+                <blockquote style="border-left: 3px solid #00ff41; padding-left: 1rem; margin: 1rem 0; font-style: italic;">
+                    出演確定ではなくてもOK！<br>
+                    まずは情報収集として話を聞いてみたいという方も大歓迎です。<br>
+                    事務所所属・活動歴なしでも問題ありません！
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Modal functionality
+        const cards = document.querySelectorAll('.card');
+        const modals = document.querySelectorAll('.modal');
+        const closeBtns = document.querySelectorAll('.close-btn');
+        
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const modalId = card.getAttribute('data-modal');
+                const modal = document.getElementById(modalId);
+                
+                // Remove active class from all cards
+                cards.forEach(c => c.classList.remove('active'));
+                // Add active class to clicked card
+                card.classList.add('active');
+                
+                // Show modal
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const modal = btn.closest('.modal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                
+                // Remove active class from all cards
+                cards.forEach(c => c.classList.remove('active'));
+            });
+        });
+        
+        // Close modal when clicking outside
+        modals.forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Remove active class from all cards
+                    cards.forEach(c => c.classList.remove('active'));
+                }
+            });
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.modal.active');
+                if (activeModal) {
+                    activeModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Remove active class from all cards
+                    cards.forEach(c => c.classList.remove('active'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
