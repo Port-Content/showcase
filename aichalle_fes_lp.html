@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アイチャレFES＋ - 番組×ライブの新感覚対バンイベント</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f1ff 0%, #e8f4ff 30%, #fff5f8 60%, #f0f8ff 100%);
+        }
+
+        /* Story-style progress bar */
+        .story-progress {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 8px;
+            height: 4px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .progress-bar.completed .progress-fill {
+            width: 100%;
+        }
+
+        .progress-bar.active .progress-fill {
+            width: 100%;
+        }
+
+        /* Page Container */
+        .page-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+        }
+
+        /* Individual Pages */
+        .page {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f1ff 0%, #e8f4ff 30%, #fff5f8 60%, #f0f8ff 100%);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .page.current {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) rotateY(0deg) scale(1);
+            z-index: 10;
+        }
+
+        .page.next {
+            opacity: 0.3;
+            visibility: visible;
+            transform: translateX(100%) rotateY(45deg) scale(0.8);
+            z-index: 5;
+        }
+
+        .page.prev {
+            opacity: 0.3;
+            visibility: visible;
+            transform: translateX(-100%) rotateY(-45deg) scale(0.8);
+            z-index: 5;
+        }
+
+        /* Sparkle/Star Background */
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(255, 182, 193, 0.4) 0%, rgba(255, 182, 193, 0.2) 30%, transparent 30%),
+                radial-gradient(circle at 85% 75%, rgba(173, 216, 230, 0.4) 0%, rgba(173, 216, 230, 0.2) 35%, transparent 35%),
+                radial-gradient(circle at 45% 85%, rgba(255, 218, 185, 0.3) 0%, rgba(255, 218, 185, 0.1) 25%, transparent 25%),
+                radial-gradient(circle at 75% 15%, rgba(221, 160, 221, 0.4) 0%, rgba(221, 160, 221, 0.2) 40%, transparent 40%),
+                radial-gradient(circle at 25% 65%, rgba(255, 255, 224, 0.5) 0%, rgba(255, 255, 224, 0.2) 20%, transparent 20%);
+            background-size: 800px 600px, 600px 800px, 500px 400px, 700px 500px, 400px 600px;
+            animation: floatClouds 20s ease-in-out infinite;
+        }
+
+        @keyframes floatClouds {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translate(20px, -10px) scale(1.05);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: translate(-15px, 15px) scale(0.95);
+                opacity: 0.7;
+            }
+            75% { 
+                transform: translate(10px, -20px) scale(1.02);
+                opacity: 0.85;
+            }
+        }
+
+        /* Page Content */
+        .page-content {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+            color: #333;
+            max-width: 1100px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Typography */
+        .page h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 3px;
+            line-height: 1.1;
+            background: linear-gradient(45deg, #ff1744, #f06292, #ff6ec7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+            color: #333;
+        }
+
+        .page h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .page p {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #ff1744, #f06292);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* MC Section */
+        .mc-section {
+            background: rgba(255, 182, 193, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(255, 182, 193, 0.4);
+        }
+
+        .mc-highlight {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ff1744;
+            margin-bottom: 15px;
+        }
+
+        /* Feature Grid - 2x2 Layout */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 25px;
+            margin: 40px 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 40px rgba(255, 182, 193, 0.2);
+        }
+
+        .feature-item .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature-item p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+            color: #555;
+        }
+
+        /* Entry Form Section */
+        .entry-section {
+            background: rgba(173, 216, 230, 0.2);
+            border: 3px solid rgba(173, 216, 230, 0.4);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .flow-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0066cc;
+            margin: 20px 0;
+        }
+
+        /* Price Cards - Horizontal Layout */
+        .price-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .price-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(221, 160, 221, 0.4);
+            border-radius: 25px;
+            padding: 40px 35px;
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 300px;
+            min-width: 250px;
+        }
+
+        .price-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .price-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff1744;
+            margin-bottom: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff1744, #f06292);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 15px 10px;
+            box-shadow: 0 8px 25px rgba(255, 23, 68, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 23, 68, 0.4);
+            background: linear-gradient(45deg, #f06292, #ff1744);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #0066cc;
+            border: 3px solid #0066cc;
+        }
+
+        .btn-secondary:hover {
+            background: #0066cc;
+            color: white;
+        }
+
+        /* Tap zones for navigation */
+        .tap-zone {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: 999;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tap-zone.left {
+            left: 0;
+        }
+
+        .tap-zone.right {
+            right: 0;
+        }
+
+        .tap-zone:active {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* FAQ */
+        .faq-list {
+            text-align: left;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(173, 216, 230, 0.3);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: #333;
+        }
+
+        .faq-question:hover {
+            background: rgba(173, 216, 230, 0.1);
+        }
+
+        .faq-answer {
+            padding: 0 25px 20px 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page h1 {
+                font-size: 2.8rem;
+            }
+            
+            .page h2 {
+                font-size: 2.5rem;
+            }
+            
+            .page h3 {
+                font-size: 2rem;
+            }
+            
+            .page p {
+                font-size: 1.1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+            }
+            
+            .price-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .page-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Story-style progress bar -->
+    <div class="story-progress" id="storyProgress">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- Tap zones -->
+    <div class="tap-zone left" id="tapLeft"></div>
+    <div class="tap-zone right" id="tapRight"></div>
+
+    <div class="page-container" id="pageContainer">
+        <!-- Page 1: Hero -->
+        <div class="page current" id="page0">
+            <div class="page-content">
+                <h1>アイチャレ LIVE FES+</h1>
+                <p class="subtitle">番組×ライブの新感覚対バンイベント</p>
+                <p>PR番組出演 + ライブ + 物販の三本立て</p>
+                <p>都内最強音響のレア会場 × 人気芸人MC × 無料配信番組</p>
+                <div style="margin-top: 50px;">
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">今すぐエントリー</a>
+                    <a href="https://x.com/ichale_live" class="btn btn-secondary">Xをフォロー</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: 4つの特徴 -->
+        <div class="page" id="page1">
+            <div class="page-content">
+                <h2>4つの特徴</h2>
+                <div class="mc-section">
+                    <div class="mc-highlight">MC：たかみち店長</div>
+                    <p style="font-size: 1.3rem; margin-bottom: 15px;">TikTokフォロワー50万人超の人気芸人</p>
+                    <p style="font-size: 1.1rem; color: #ff1744; font-weight: 600;">喋りが苦手でも安心！</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="icon">📺</div>
+                        <h4>番組出演でPR効果抜群</h4>
+                        <p>トークバラエティ形式でライブ前にしっかりアピール</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🎵</div>
+                        <h4>最高音質のレア会場</h4>
+                        <p>L-Acoustics A15中心の高音質サウンド</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">💰</div>
+                        <h4>出演料・手数料なし</h4>
+                        <p>出演料やチャージバック、物販手数料は一切なし</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🌟</div>
+                        <h4>無料配信で拡散効果</h4>
+                        <p>番組配信でファン拡大のチャンス</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px;">
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーフォーム</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Venue & Schedule -->
+        <div class="page" id="page2">
+            <div class="page-content">
+                <h2>会場・スケジュール</h2>
+                <h3>KMAパラダイスホール</h3>
+                <p>〒154-0001 東京都世田谷区池尻3丁目28-8</p>
+                <p>池尻大橋駅 徒歩7分／三軒茶屋駅 徒歩9分・キャパシティ300人</p>
+                
+                <div class="entry-section">
+                    <h3 style="color: #0066cc;">開催日程</h3>
+                    <p style="margin: 20px 0;">具体的な日程は下記エントリーフォームでご確認ください</p>
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーフォームで日時確認</a>
+                </div>
+
+                <div class="flow-text">PR番組（20分） ➝ ライブ（20分） ➝ 物販（60分）</div>
+            </div>
+        </div>
+
+        <!-- Page 4: Pricing & Past Video -->
+        <div class="page" id="page3">
+            <div class="page-content">
+                <h2>チケット料金</h2>
+                <div class="price-grid">
+                    <div class="price-card">
+                        <div class="price-title">VIP席（前方）</div>
+                        <div class="price-amount">¥3,000</div>
+                        <p>+ 1ドリンク</p>
+                    </div>
+                    <div class="price-card">
+                        <div class="price-title">一般席（後方）</div>
+                        <div class="price-amount">¥2,000</div>
+                        <p>+ 1ドリンク</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h3>応募条件</h3>
+                    <p>集客15名以上を目安（罰則なし）</p>
+                    <p>PR番組への参加にご快諾いただける方</p>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h3>過去の番組をチェック</h3>
+                    <a href="https://www.youtube.com/live/yBLOkdPDiA0?si=9TnXSH7Uof4kje3w" class="btn btn-secondary">YouTubeで過去動画を見る</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: FAQ & CTA -->
+        <div class="page" id="page4">
+            <div class="page-content">
+                <h2>よくある質問</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">出演料やチャージバックはありますか？</div>
+                        <div class="faq-answer">ありません。出演に関する費用は一切かかりません。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">物販手数料はありますか？</div>
+                        <div class="faq-answer">ありません。物販の売上は100%アーティストのものです。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">集客が15人未満だった場合は？</div>
+                        <div class="faq-answer">罰則はありませんが、一定の集客努力をお願いしています。</div>
+                    </div>
+                </div>
+                <div style="margin-top: 50px;">
+                    <h3>新時代のアイドルイベント</h3>
+                    <p>あなたの可能性を最大限に引き出す舞台がここにあります</p>
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーする</a>
+                </div>
+            </div>
+        </div><p style="font-size: 1.3rem; margin-bottom: 15px;">TikTokフォロワー50万人超の人気芸人</p>
+                    <p style="font-size: 1.1rem; color: #ffd700; font-weight: 600;">喋りが苦手でも安心！</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="icon">📺</div>
+                        <h4>番組出演でPR効果抜群</h4>
+                        <p>トークバラエティ形式でライブ前にしっかりアピール</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🎵</div>
+                        <h4>最高音質のレア会場</h4>
+                        <p>L-Acoustics A15中心の高音質サウンド</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">💰</div>
+                        <h4>出演料・手数料なし</h4>
+                        <p>出演料やチャージバック、物販手数料は一切なし</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🌟</div>
+                        <h4>無料配信で拡散効果</h4>
+                        <p>番組配信でファン拡大のチャンス</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Venue & Schedule -->
+        <div class="page" id="page2">
+            <div class="page-content">
+                <h2>会場・スケジュール</h2>
+                <h3>KMAパラダイスホール</h3>
+                <p>〒154-0001 東京都世田谷区池尻3丁目28-8</p>
+                <p>池尻大橋駅 徒歩7分／三軒茶屋駅 徒歩9分・キャパシティ300人</p>
+                
+                <div class="entry-section">
+                    <h3 style="color: #ffd700;">開催日程</h3>
+                    <p style="margin: 20px 0;">具体的な日程は下記エントリーフォームでご確認ください</p>
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーフォームで日時確認</a>
+                </div>
+
+                <div class="flow-text">PR番組（20分） ➝ ライブ（20分） ➝ 物販（60分）</div>
+            </div>
+        </div>
+
+        <!-- Page 4: Pricing & Past Video -->
+        <div class="page" id="page3">
+            <div class="page-content">
+                <h2>チケット料金</h2>
+                <div class="price-grid">
+                    <div class="price-card">
+                        <div class="price-title">VIP席（前方）</div>
+                        <div class="price-amount">¥3,000</div>
+                        <p>+ 1ドリンク</p>
+                    </div>
+                    <div class="price-card">
+                        <div class="price-title">一般席（後方）</div>
+                        <div class="price-amount">¥2,000</div>
+                        <p>+ 1ドリンク</p>
+                    </div>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h3>応募条件</h3>
+                    <p>集客15名以上を目安（罰則なし）</p>
+                    <p>PR番組への参加にご快諾いただける方</p>
+                </div>
+                <div style="margin-top: 40px;">
+                    <h3>過去の番組をチェック</h3>
+                    <a href="https://www.youtube.com/live/yBLOkdPDiA0?si=9TnXSH7Uof4kje3w" class="btn btn-secondary">YouTubeで過去動画を見る</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: FAQ & CTA -->
+        <div class="page" id="page4">
+            <div class="page-content">
+                <h2>よくある質問</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">出演料やチャージバックはありますか？</div>
+                        <div class="faq-answer">ありません。出演に関する費用は一切かかりません。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">物販手数料はありますか？</div>
+                        <div class="faq-answer">ありません。物販の売上は100%アーティストのものです。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">集客が15人未満だった場合は？</div>
+                        <div class="faq-answer">罰則はありませんが、一定の集客努力をお願いしています。</div>
+                    </div>
+                </div>
+                <div style="margin-top: 50px;">
+                    <h3>新時代のアイドルイベント</h3>
+                    <p>あなたの可能性を最大限に引き出す舞台がここにあります</p>
+                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーする</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const totalPages = 5;
+        const pages = document.querySelectorAll('.page');
+        const progressBars = document.querySelectorAll('.progress-bar');
+        const tapLeft = document.getElementById('tapLeft');
+        const tapRight = document.getElementById('tapRight');
+        let isTransitioning = false;
+
+        function updatePage() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            // Update page states
+            pages.forEach((page, index) => {
+                page.classList.remove('current', 'next', 'prev');
+                
+                if (index === currentPage) {
+                    page.classList.add('current');
+                } else if (index === currentPage + 1) {
+                    page.classList.add('next');
+                } else if (index === currentPage - 1) {
+                    page.classList.add('prev');
+                }
+            });
+
+            // Update progress bars
+            progressBars.forEach((bar, index) => {
+                bar.classList.remove('active', 'completed');
+                if (index < currentPage) {
+                    bar.classList.add('completed');
+                } else if (index === currentPage) {
+                    bar.classList.add('active');
+                }
+            });
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 400);
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages - 1 && !isTransitioning) {
+                currentPage++;
+                updatePage();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 0 && !isTransitioning) {
+                currentPage--;
+                updatePage();
+            }
+        }
+
+        // Tap zone handlers
+        tapLeft.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            previousPage();
+        });
+
+        tapRight.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            nextPage();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextPage();
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                previousPage();
+            }
+        });
+
+        // Touch/swipe support
+        let startX = 0;
+        let startY = 0;
+        let endX = 0;
+        let endY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const threshold = 50;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    nextPage(); // Swipe left (next page)
+                } else {
+                    previousPage(); // Swipe right (previous page)
+                }
+            }
+        }
+
+        // Initialize
+        updatePage();
+    </script>
+</body>
+</html>
