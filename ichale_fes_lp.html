@@ -89,20 +89,20 @@
         }
 
         .page.next {
-            opacity: 0.3;
-            visibility: visible;
+            opacity: 0;
+            visibility: hidden;
             transform: translateX(100%) rotateY(45deg) scale(0.8);
             z-index: 5;
         }
 
         .page.prev {
-            opacity: 0.3;
-            visibility: visible;
+            opacity: 0;
+            visibility: hidden;
             transform: translateX(-100%) rotateY(-45deg) scale(0.8);
             z-index: 5;
         }
 
-        /* Sparkle/Star Background */
+        /* Sparkle/Star Background - モバイル時は削除 */
         .page::before {
             content: '';
             position: absolute;
@@ -218,16 +218,72 @@
             margin-bottom: 15px;
         }
 
-        /* Feature Grid - 2x2 Layout */
+        /* Feature Grid - 2x2 Layout - 強制適用 */
         .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 25px;
-            margin: 40px 0;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: 1fr 1fr !important;
+            gap: 25px !important;
+            margin: 40px 0 !important;
+            max-width: 800px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 2px solid rgba(255, 182, 193, 0.3) !important;
+            border-radius: 20px !important;
+            padding: 25px 20px !important;
+            text-align: center !important;
+            transition: all 0.3s ease !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }
+
+        /* 価格グリッドも強制2カラム */
+        .price-grid {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 40px !important;
+            margin: 40px 0 !important;
+            flex-wrap: nowrap !important;
+            flex-direction: row !important;
+        }
+
+        .price-card {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 3px solid rgba(221, 160, 221, 0.4) !important;
+            border-radius: 25px !important;
+            padding: 40px 35px !important;
+            text-align: center !important;
+            transition: all 0.3s ease !important;
+            flex: 1 !important;
+            max-width: 300px !important;
+            min-width: 250px !important;
+            width: auto !important;
+        }
+
+        /* モバイルでも絶対に横並び維持 */
+        @media (max-width: 768px) {
+            .price-grid {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: center !important;
+                gap: 40px !important;
+                margin: 40px 0 !important;
+                flex-wrap: nowrap !important;
+            }
+
+            .price-card {
+                flex: 1 !important;
+                max-width: 300px !important;
+                min-width: 200px !important;
+                width: auto !important;
+            }
         }
 
         .feature-item {
