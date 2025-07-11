@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アイチャレFES＋ - 番組×ライブの新感覚対バンイベント</title>
+    <title>アイチャレ LIVE FES+ - 番組×ライブの新感覚対バンイベント</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,6 @@
         body {
             font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', sans-serif;
             overflow: hidden;
-            /* BACKGROUND_THEME: パステル系、ダーク系、ビビッド系から選択 */
             background: linear-gradient(135deg, #f8f1ff 0%, #e8f4ff 30%, #fff5f8 60%, #f0f8ff 100%);
             position: fixed;
             width: 100%;
@@ -24,9 +23,9 @@
         /* Story-style progress bar */
         .story-progress {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            right: 20px;
+            top: 10px;
+            left: 10px;
+            right: 10px;
             z-index: 1001;
             display: flex;
             gap: 8px;
@@ -81,28 +80,7 @@
             visibility: hidden;
         }
 
-        .page.current {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0) rotateY(0deg) scale(1);
-            z-index: 10;
-        }
-
-        .page.next {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(100%) rotateY(45deg) scale(0.8);
-            z-index: 5;
-        }
-
-        .page.prev {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-100%) rotateY(-45deg) scale(0.8);
-            z-index: 5;
-        }
-
-        /* Sparkle/Star Background - モバイル時は削除 */
+        /* Cloud Background */
         .page::before {
             content: '';
             position: absolute;
@@ -137,6 +115,27 @@
                 transform: translate(10px, -20px) scale(1.02);
                 opacity: 0.85;
             }
+        }
+
+        .page.current {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) rotateY(0deg) scale(1);
+            z-index: 10;
+        }
+
+        .page.next {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100%) rotateY(45deg) scale(0.8);
+            z-index: 5;
+        }
+
+        .page.prev {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-100%) rotateY(-45deg) scale(0.8);
+            z-index: 5;
         }
 
         /* Page Content */
@@ -218,72 +217,16 @@
             margin-bottom: 15px;
         }
 
-        /* Feature Grid - 2x2 Layout - 強制適用 */
+        /* Feature Grid - 2x2 Layout */
         .feature-grid {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: 1fr 1fr !important;
-            gap: 25px !important;
-            margin: 40px 0 !important;
-            max-width: 800px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-        }
-
-        .feature-item {
-            background: rgba(255, 255, 255, 0.7) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 2px solid rgba(255, 182, 193, 0.3) !important;
-            border-radius: 20px !important;
-            padding: 25px 20px !important;
-            text-align: center !important;
-            transition: all 0.3s ease !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: center !important;
-        }
-
-        /* 価格グリッドも強制2カラム */
-        .price-grid {
-            display: flex !important;
-            justify-content: center !important;
-            gap: 40px !important;
-            margin: 40px 0 !important;
-            flex-wrap: nowrap !important;
-            flex-direction: row !important;
-        }
-
-        .price-card {
-            background: rgba(255, 255, 255, 0.8) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 3px solid rgba(221, 160, 221, 0.4) !important;
-            border-radius: 25px !important;
-            padding: 40px 35px !important;
-            text-align: center !important;
-            transition: all 0.3s ease !important;
-            flex: 1 !important;
-            max-width: 300px !important;
-            min-width: 250px !important;
-            width: auto !important;
-        }
-
-        /* モバイルでも絶対に横並び維持 */
-        @media (max-width: 768px) {
-            .price-grid {
-                display: flex !important;
-                flex-direction: row !important;
-                justify-content: center !important;
-                gap: 40px !important;
-                margin: 40px 0 !important;
-                flex-wrap: nowrap !important;
-            }
-
-            .price-card {
-                flex: 1 !important;
-                max-width: 300px !important;
-                min-width: 200px !important;
-                width: auto !important;
-            }
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 25px;
+            margin: 40px 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .feature-item {
@@ -340,7 +283,7 @@
             margin: 20px 0;
         }
 
-        /* Price Cards - Horizontal Layout */
+        /* Price Cards */
         .price-grid {
             display: flex;
             justify-content: center;
@@ -396,7 +339,7 @@
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            z-index: 9999 !important;
+            z-index: 9999;
             position: relative;
             pointer-events: auto;
         }
@@ -411,7 +354,7 @@
             background: transparent;
             color: #0066cc;
             border: 3px solid #0066cc;
-            z-index: 9999 !important;
+            z-index: 9999;
             position: relative;
             pointer-events: auto;
         }
@@ -421,7 +364,43 @@
             color: white;
         }
 
-        /* Tap zones for navigation */
+        /* Swipe Guide - 指のみでスワイプ表現 */
+        .swipe-guide {
+            position: fixed;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            z-index: 1002;
+            pointer-events: none;
+        }
+
+        .finger {
+            font-size: 2rem;
+            color: rgba(0, 0, 0, 0.6);
+            display: inline-block;
+            animation: fingerSwipe 2s ease-in-out infinite;
+        }
+
+        @keyframes fingerSwipe {
+            0% { 
+                transform: translateX(-20px);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: translateX(20px);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateX(-20px);
+                opacity: 0.4;
+            }
+        }
+
+        /* 最後のページでは非表示 */
+        .swipe-guide.last-page {
+            opacity: 0 !important;
+            transition: opacity 0.5s ease;
+        }
         .tap-zone {
             position: fixed;
             top: 50px;
@@ -445,22 +424,8 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Debug visibility - remove after testing */
         .tap-zone:hover {
             background: rgba(255, 0, 0, 0.1);
-        }
-
-        /* Make sure buttons are above tap zones */
-        .btn, .btn-secondary {
-            pointer-events: auto !important;
-            z-index: 9999 !important;
-        }
-
-        /* Ensure all interactive elements are clickable */
-        a, button, .btn, .btn-secondary {
-            pointer-events: auto !important;
-            z-index: 9999 !important;
-            position: relative;
         }
 
         /* Page content should not block taps */
@@ -472,7 +437,64 @@
             pointer-events: auto;
         }
 
-        /* FAQ */
+        /* Media Section */
+        .media-section {
+            background: rgba(173, 216, 230, 0.15);
+            border: 2px solid rgba(173, 216, 230, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .media-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .media-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(173, 216, 230, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .media-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(173, 216, 230, 0.3);
+        }
+
+        .media-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .media-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .media-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #0066cc, #4da6ff);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .media-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
         .faq-list {
             text-align: left;
             max-width: 700px;
@@ -508,203 +530,104 @@
             color: #555;
         }
 
-        /* Responsive */
+        /* Mobile Responsive - Scale Down Approach */
         @media (max-width: 768px) {
+            /* モバイルでは背景を少し軽くする */
+            .page::before {
+                opacity: 0.6;
+            }
+
             .story-progress {
-                top: 10px;
-                left: 10px;
-                right: 10px;
+                top: 5px;
+                left: 5px;
+                right: 5px;
                 height: 3px;
-                gap: 6px;
-            }
-
-            .page h1 {
-                font-size: 2.5rem;
-                letter-spacing: 1px;
-                margin-bottom: 20px;
-            }
-            
-            .page h2 {
-                font-size: 2.2rem;
-                margin-bottom: 20px;
-            }
-            
-            .page h3 {
-                font-size: 1.8rem;
-                margin-bottom: 15px;
-            }
-            
-            .page p {
-                font-size: 1rem;
-                margin-bottom: 15px;
-            }
-
-            .subtitle {
-                font-size: 1.3rem;
-                margin-bottom: 30px;
-            }
-
-            .page {
-                overflow-y: auto;
-                overflow-x: hidden;
-                align-items: flex-start;
-                padding-top: 60px;
+                gap: 4px;
             }
 
             .page-content {
-                padding: 15px 10px;
-                margin: 0 5px 20px 5px;
-                max-width: calc(100vw - 10px);
-                border-radius: 20px;
-                max-height: none;
-                overflow: visible;
-                position: static;
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(4, 1fr);
-                gap: 15px;
-                margin: 20px 0;
+                transform: scale(0.7);
+                transform-origin: center;
+                max-width: none;
+                width: 140vw;
+                margin: 0;
+                background: rgba(255, 255, 255, 0.95);
             }
 
-            .feature-item {
-                padding: 20px 15px;
-            }
-
-            .feature-item .icon {
-                font-size: 2rem;
-                margin-bottom: 10px;
-            }
-
-            .feature-item h4 {
-                font-size: 1.1rem;
-                margin-bottom: 8px;
-            }
-
-            .feature-item p {
-                font-size: 0.9rem;
-                line-height: 1.4;
-            }
-
-            .mc-section {
-                padding: 20px 15px;
-                margin: 20px 0;
-            }
-
-            .mc-highlight {
-                font-size: 1.2rem;
-                margin-bottom: 10px;
-            }
-
-            .entry-section {
-                padding: 20px 15px;
-                margin: 20px 0;
-            }
-
-            .flow-text {
-                font-size: 1.3rem;
-                margin: 15px 0;
-                line-height: 1.4;
-            }
-            
-            .price-grid {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-                margin: 20px 0;
-            }
-
-            .price-card {
-                max-width: 100%;
-                min-width: auto;
-                width: 100%;
-                padding: 25px 20px;
-            }
-
-            .price-title {
-                font-size: 1.3rem;
-                margin-bottom: 15px;
-            }
-
-            .price-amount {
-                font-size: 2.5rem;
-                margin-bottom: 8px;
-            }
-
-            .btn {
-                font-size: 1.1rem;
-                padding: 15px 25px;
-                margin: 10px 5px;
-                border-radius: 40px;
-            }
-
-            .btn-secondary {
-                font-size: 1.1rem;
-                padding: 15px 25px;
-                margin: 10px 5px;
-            }
-
-            .faq-list {
-                max-width: 100%;
-            }
-
-            .faq-item {
-                margin-bottom: 15px;
-            }
-
-            .faq-question {
-                padding: 15px 20px;
-                font-size: 1.1rem;
-            }
-
-            .faq-answer {
-                padding: 0 20px 15px 20px;
-                font-size: 1rem;
-                line-height: 1.5;
-            }
-
-            /* タップゾーンをモバイル用に調整 */
             .tap-zone {
-                top: 40px;
-                bottom: 40px;
+                top: 30px;
+                bottom: 30px;
                 width: 35%;
             }
 
-            /* より小さい画面（iPhone SE等）対応 */
+            .finger {
+                font-size: 1.5rem;
+            }
+
+            /* 4P用の1カラム価格表示 */
+            #page3 .price-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            #page3 .price-card {
+                max-width: 100%;
+                width: 100%;
+                flex: none;
+            }
+
+            /* 個別ページ調整 */
+            #page1 .page-content {
+                transform: scale(0.65);
+                width: 150vw;
+            }
+
+            #page3 .page-content {
+                transform: scale(0.7);
+                width: 140vw;
+            }
+
+            #page4 .page-content {
+                transform: scale(0.75);
+                width: 130vw;
+            }
+
             @media (max-width: 480px) {
-                .page h1 {
-                    font-size: 2rem;
-                }
-                
-                .page h2 {
-                    font-size: 1.8rem;
-                }
-                
-                .page h3 {
-                    font-size: 1.5rem;
-                }
-
                 .page-content {
-                    padding: 15px 10px;
-                    margin: 15px 5px;
+                    transform: scale(0.6);
+                    width: 165vw;
                 }
 
-                .feature-item {
-                    padding: 15px 10px;
+                #page1 .page-content {
+                    transform: scale(0.55);
+                    width: 180vw;
                 }
 
-                .btn {
-                    font-size: 1rem;
-                    padding: 12px 20px;
+                #page3 .page-content {
+                    transform: scale(0.6);
+                    width: 165vw;
+                }
+
+                #page4 .page-content {
+                    transform: scale(0.65);
+                    width: 150vw;
                 }
             }
         }
     </style>
 </head>
 <body>
+    <!-- Swipe guide -->
+    <div class="swipe-guide" id="swipeGuide">
+        <span class="finger">👆</span>
+    </div>
+
     <!-- Story-style progress bar -->
     <div class="story-progress" id="storyProgress">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
         <div class="progress-bar">
             <div class="progress-fill"></div>
         </div>
@@ -824,106 +747,38 @@
             </div>
         </div>
 
-        <!-- Page 5: FAQ & CTA -->
+        <!-- Page 5: Media Coverage -->
         <div class="page" id="page4">
             <div class="page-content">
-                <h2>よくある質問</h2>
-                <div class="faq-list">
-                    <div class="faq-item">
-                        <div class="faq-question">出演料やチャージバックはありますか？</div>
-                        <div class="faq-answer">ありません。出演に関する費用は一切かかりません。</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">物販手数料はありますか？</div>
-                        <div class="faq-answer">ありません。物販の売上は100%アーティストのものです。</div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">集客が15人未満だった場合は？</div>
-                        <div class="faq-answer">罰則はありませんが、一定の集客努力をお願いしています。</div>
+                <h2>メディア掲載</h2>
+                <div class="media-section">
+                    <h3 style="color: #0066cc; text-align: center; margin-bottom: 20px;">各種メディアで注目されています</h3>
+                    <div class="media-list">
+                        <div class="media-item">
+                            <div class="media-title">ガルポ！</div>
+                            <div class="media-description">アイドル・ガールズポップ専門情報サイト</div>
+                            <a href="https://www.galpo.info/feature/208/list/12575" class="media-link" target="_blank">記事を読む</a>
+                        </div>
+                        <div class="media-item">
+                            <div class="media-title">POETRY ON</div>
+                            <div class="media-description">生きがい発見メディア「ポエトリー・オン」</div>
+                            <a href="https://entame01.com/article/16" class="media-link" target="_blank">記事を読む</a>
+                        </div>
+                        <div class="media-item">
+                            <div class="media-title">アイチャレ番組</div>
+                            <div class="media-description">過去開催の番組アーカイブ</div>
+                            <a href="https://www.youtube.com/live/yBLOkdPDiA0?si=hKQLXmoAemYXhlVd" class="media-link" target="_blank">動画を見る</a>
+                        </div>
                     </div>
                 </div>
-                <div style="margin-top: 50px;">
-                    <h3>新時代のアイドルイベント</h3>
-                    <p>あなたの可能性を最大限に引き出す舞台がここにあります</p>
-                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーする</a>
-                </div>
-            </div>
-        </div><p style="font-size: 1.3rem; margin-bottom: 15px;">TikTokフォロワー50万人超の人気芸人</p>
-                    <p style="font-size: 1.1rem; color: #ffd700; font-weight: 600;">喋りが苦手でも安心！</p>
-                </div>
-                <div class="feature-grid">
-                    <div class="feature-item">
-                        <div class="icon">📺</div>
-                        <h4>番組出演でPR効果抜群</h4>
-                        <p>トークバラエティ形式でライブ前にしっかりアピール</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="icon">🎵</div>
-                        <h4>最高音質のレア会場</h4>
-                        <p>L-Acoustics A15中心の高音質サウンド</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="icon">💰</div>
-                        <h4>出演料・手数料なし</h4>
-                        <p>出演料やチャージバック、物販手数料は一切なし</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="icon">🌟</div>
-                        <h4>無料配信で拡散効果</h4>
-                        <p>番組配信でファン拡大のチャンス</p>
-                    </div>
+                <div style="margin-top: 30px;">
+                    <p style="text-align: center; color: #666;">信頼と実績のあるイベントです</p>
                 </div>
             </div>
         </div>
 
-        <!-- Page 3: Venue & Schedule -->
-        <div class="page" id="page2">
-            <div class="page-content">
-                <h2>会場・スケジュール</h2>
-                <h3>KMAパラダイスホール</h3>
-                <p>〒154-0001 東京都世田谷区池尻3丁目28-8</p>
-                <p>池尻大橋駅 徒歩7分／三軒茶屋駅 徒歩9分・キャパシティ300人</p>
-                
-                <div class="entry-section">
-                    <h3 style="color: #ffd700;">開催日程</h3>
-                    <p style="margin: 20px 0;">具体的な日程は下記エントリーフォームでご確認ください</p>
-                    <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="btn">エントリーフォームで日時確認</a>
-                </div>
-
-                <div class="flow-text">PR番組（20分） ➝ ライブ（20分） ➝ 物販（60分）</div>
-            </div>
-        </div>
-
-        <!-- Page 4: Pricing & Past Video -->
-        <div class="page" id="page3">
-            <div class="page-content">
-                <h2>チケット料金</h2>
-                <div class="price-grid">
-                    <div class="price-card">
-                        <div class="price-title">VIP席（前方）</div>
-                        <div class="price-amount">¥3,000</div>
-                        <p>+ 1ドリンク</p>
-                    </div>
-                    <div class="price-card">
-                        <div class="price-title">一般席（後方）</div>
-                        <div class="price-amount">¥2,000</div>
-                        <p>+ 1ドリンク</p>
-                    </div>
-                </div>
-                <div style="margin-top: 40px;">
-                    <h3>応募条件</h3>
-                    <p>集客15名以上を目安（罰則なし）</p>
-                    <p>PR番組への参加にご快諾いただける方</p>
-                </div>
-                <div style="margin-top: 40px;">
-                    <h3>過去の番組をチェック</h3>
-                    <a href="https://www.youtube.com/live/yBLOkdPDiA0?si=9TnXSH7Uof4kje3w" class="btn btn-secondary">YouTubeで過去動画を見る</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page 5: FAQ & CTA -->
-        <div class="page" id="page4">
+        <!-- Page 6: FAQ & CTA -->
+        <div class="page" id="page5">
             <div class="page-content">
                 <h2>よくある質問</h2>
                 <div class="faq-list">
@@ -951,7 +806,7 @@
 
     <script>
         let currentPage = 0;
-        const totalPages = 5;
+        const totalPages = 6;
         const pages = document.querySelectorAll('.page');
         const progressBars = document.querySelectorAll('.progress-bar');
         const tapLeft = document.getElementById('tapLeft');
@@ -975,7 +830,7 @@
                 }
             });
 
-            // Update progress bars
+            // Update progress bars and swipe guide
             progressBars.forEach((bar, index) => {
                 bar.classList.remove('active', 'completed');
                 if (index < currentPage) {
@@ -984,6 +839,14 @@
                     bar.classList.add('active');
                 }
             });
+
+            // Hide swipe guide on last page
+            const swipeGuide = document.getElementById('swipeGuide');
+            if (currentPage === totalPages - 1) {
+                swipeGuide.classList.add('last-page');
+            } else {
+                swipeGuide.classList.remove('last-page');
+            }
 
             setTimeout(() => {
                 isTransitioning = false;
@@ -1004,7 +867,7 @@
             }
         }
 
-        // Tap zone handlers - simplified
+        // Tap zone handlers
         tapLeft.addEventListener('click', (e) => {
             console.log('Left tap triggered');
             previousPage();
@@ -1015,7 +878,7 @@
             nextPage();
         });
 
-        // Add visual feedback for debugging
+        // Visual feedback for debugging
         tapLeft.addEventListener('mousedown', () => {
             tapLeft.style.background = 'rgba(0, 255, 0, 0.2)';
         });
