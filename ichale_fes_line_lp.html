@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アイチャレライブイベント - 出演者募集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8E8 100%);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        .chat-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8E8 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            background: #fff;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .online-status {
+            font-size: 12px;
+            color: #06c755;
+            margin-top: 2px;
+        }
+
+        .messages {
+            padding: 20px 16px;
+            padding-bottom: 100px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.admin {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .user .message-avatar {
+            background: linear-gradient(135deg, #B3EA90, #7ED321);
+            margin-right: 0;
+            margin-left: 8px;
+        }
+
+        .message-content {
+            background: #fff;
+            padding: 14px 18px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            font-size: 16px;
+            font-weight: 400;
+            max-width: 85%;
+        }
+
+        .message.admin .message-content {
+            border-bottom-left-radius: 4px;
+        }
+
+        /* ユーザー側のメッセージを固定幅にする */
+        .message.user .message-content {
+            background: #B3EA90;
+            border-bottom-right-radius: 4px;
+            width: 320px; /* 固定幅 */
+            max-width: none; /* max-widthを無効化 */
+        }
+
+        .message-content::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .message.admin .message-content::before {
+            left: -8px;
+            border: 8px solid transparent;
+            border-right-color: #fff;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .message.user .message-content::before {
+            right: -8px;
+            border: 8px solid transparent;
+            border-left-color: #B3EA90;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, #FFE066, #FF8A65);
+            color: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-size: 18px;
+            margin: 0 4px;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #06c755, #4ECDC4);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 199, 85, 0.4);
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px;
+            border-radius: 14px;
+            margin: 12px 0;
+            border-left: 5px solid #06c755;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 18px;
+            margin: 12px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .event-card.rush {
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+        }
+
+        .event-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .event-detail {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .event-detail .emoji {
+            margin-right: 8px;
+        }
+
+        .popup-box {
+            background: linear-gradient(135deg, #ff6b6b, #feca57, #48cae4, #ff6b6b);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 24px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .popup-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @media (max-width: 480px) {
+            .message-content {
+                font-size: 15px;
+                padding: 12px 16px;
+            }
+
+            /* スマホでのユーザーメッセージ固定幅 */
+            .message.user .message-content {
+                width: 280px; /* スマホでの固定幅 */
+            }
+            
+            .messages {
+                padding: 16px 12px;
+            }
+
+            .event-title {
+                font-size: 18px;
+            }
+
+            .info-section {
+                padding: 14px;
+            }
+
+            .event-card {
+                padding: 16px;
+            }
+
+            .popup-box {
+                margin: 20px 12px;
+                padding: 16px 12px;
+                font-size: 16px;
+            }
+
+            .popup-box div:first-child {
+                font-size: 18px !important;
+            }
+
+            .popup-box div:nth-child(2) {
+                font-size: 14px !important;
+            }
+
+            .popup-box > div:last-child > div {
+                font-size: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="profile-img">🎵</div>
+            <div class="header-info">
+                <div class="header-name">アイチャレイベント運営</div>
+                <div class="online-status">オンライン</div>
+            </div>
+        </div>
+
+        <div class="messages">
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        こんにちは！<span class="emoji">✨</span><br>
+                        <span class="highlight">アイチャレ主催ライブイベント</span>の出演者を募集中です！<span class="emoji">🎤</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        どんなイベントですか？<span class="emoji">🤔</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="popup-box">
+                <div style="font-size: 22px; margin-bottom: 12px;">
+                    <span class="emoji">🎉</span> 2つのスタイルから選べるライブイベントです！ <span class="emoji">🎉</span>
+                </div>
+                <div style="font-size: 16px; font-weight: 500; margin-bottom: 16px; opacity: 0.9;">
+                    都内最強音響ライブハウス「KMAパラダイスホール」で開催！
+                </div>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; flex: 1; min-width: 120px;">
+                        <div style="font-size: 18px; margin-bottom: 4px;">⚡ RUSH</div>
+                        <div style="font-size: 14px;">昼公演・ノルマなし</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; flex: 1; min-width: 120px;">
+                        <div style="font-size: 18px; margin-bottom: 4px;">🌟 FES+</div>
+                        <div style="font-size: 14px;">夜公演・番組出演</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        まずは気軽に参加できる昼のイベントから！<span class="emoji">☀️</span>
+                        <div class="event-card rush">
+                            <div class="event-title"><span class="emoji">⚡</span> アイチャレ LIVE RUSH</div>
+                            <div class="event-detail"><span class="emoji">☀️</span> 10:00〜17:00（昼公演）</div>
+                            <div class="event-detail"><span class="emoji">✨</span> 集客ノルマなし</div>
+                            <div class="event-detail"><span class="emoji">📰</span> 雑誌特集のチャンス</div>
+                        </div>
+                        そして夜はこちら！<span class="emoji">🌙</span>
+                        <div class="event-card">
+                            <div class="event-title"><span class="emoji">🌟</span> アイチャレ LIVE FES＋</div>
+                            <div class="event-detail"><span class="emoji">⏰</span> 17:00〜21:00（夜公演）</div>
+                            <div class="event-detail"><span class="emoji">📺</span> PR番組出演あり</div>
+                            <div class="event-detail"><span class="emoji">👥</span> 対バン集客15名以上</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        違いを詳しく教えてください！<span class="emoji">💡</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        <strong>⚡ LIVE RUSHの特徴</strong><br>
+                        <div class="info-section">
+                            <span class="emoji">☀️</span> <strong>昼の時間帯（10:00〜17:00）</strong><br><br>
+                            <span class="emoji">🎤</span> <strong>20分のライブ</strong><br>
+                            <span class="emoji">🛍️</span> <strong>60分の物販時間</strong><br><br>
+                            <span class="emoji">✨</span> <strong>集客ノルマなし！</strong><br>
+                            <span class="emoji">📰</span> 3ヶ月単位で集客no1〜3は<br>
+                            <span class="highlight">雑誌特集掲載</span>（IDOL REPORT.mag）
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        <strong>🌟 LIVE FES＋の特徴</strong><br>
+                        <div class="info-section">
+                            <span class="emoji">🌙</span> <strong>夜の時間帯（17:00〜21:00）</strong><br><br>
+                            <span class="emoji">📺</span> <strong>15分のPR番組出演</strong><br>
+                            MCはTikTokフォロワー50万人超えのたかみち店長！<br><br>
+                            <span class="emoji">🎤</span> <strong>20分のライブ</strong><br>
+                            <span class="emoji">🛍️</span> <strong>60分の物販時間</strong><br><br>
+                            <span class="emoji">👥</span> 対バン集客15名以上必要
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        会場はどこですか？<span class="emoji">📍</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        <span class="emoji">🏟️</span> <strong>KMAパラダイスホール</strong><br>
+                        （旧フォーライフライブホール）<br><br>
+                        
+                        <div class="info-section">
+                            <span class="emoji">🚇</span> <strong>アクセス</strong><br>
+                            ・池尻大橋駅から徒歩7分<br>
+                            ・三軒茶屋駅から徒歩9分<br>
+                            ・三宿交差点すぐ<br><br>
+                            
+                            <span class="emoji">🎯</span> <strong>会場の特徴</strong><br>
+                            ・キャパシティ300人<br>
+                            ・天井高8m<br>
+                            ・<span class="highlight">2000万円超えの音響設備</span><br>
+                            ・音＆照明がしっかり映える最強環境！<span class="emoji">✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        料金はいくらですか？<span class="emoji">💰</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        <span class="emoji">🎫</span> <strong>チケット料金</strong><br>
+                        <div class="info-section">
+                            <span class="highlight">VIP（前方）</span><br>
+                            3,000円＋1ドリンク<br><br>
+                            
+                            <span class="highlight">後方</span><br>
+                            2,000円＋1ドリンク<br><br>
+                            
+                            ※両イベント共通料金です<span class="emoji">💡</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        すごく良い環境ですね！<span class="emoji">😍</span><br>
+                        応募したいです！
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        ありがとうございます！<span class="emoji">🙏</span><br><br>
+                        
+                        <span class="emoji">📝</span> <strong>応募方法</strong><br>
+                        下記のGoogleフォームから希望日程を送信してください！<br><br>
+                        
+                        <strong>⚡ LIVE RUSHの応募</strong><br>
+                        <a href="https://forms.gle/jiz896VFUrzThVXg9" class="cta-button" target="_blank">
+                            <span class="emoji">📰</span> RUSHエントリー
+                        </a><br><br>
+                        
+                        <strong>🌟 LIVE FES＋の応募</strong><br>
+                        <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="cta-button" target="_blank">
+                            <span class="emoji">📺</span> FES＋エントリー
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        どちらにしようか迷います…<span class="emoji">🤷‍♀️</span><br>
+                        アドバイスありますか？
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        選び方のポイントをお教えしますね！<span class="emoji">💡</span><br><br>
+                        
+                        <div class="info-section">
+                            <strong>⚡ LIVE RUSHがおすすめの方</strong><br>
+                            ・集客ノルマなしで気軽に参加したい<br>
+                            ・雑誌掲載のチャンスを狙いたい<br>
+                            ・昼の時間帯が都合良い<br>
+                            ・他のバンドと競い合いたい<br><br>
+                            
+                            <strong>🌟 LIVE FES＋がおすすめの方</strong><br>
+                            ・PR番組でファンを増やしたい<br>
+                            ・たかみち店長のMCで盛り上がりたい<br>
+                            ・15名以上の集客に自信がある<br>
+                            ・夜の時間帯が都合良い
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        両方とも都内最強音響の素晴らしい環境で、あなたの音楽をしっかり届けられます！<span class="emoji">🎵</span><br><br>
+                        
+                        ご質問があればいつでもお気軽にお聞かせください<span class="emoji">😊</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        RUSHとFES+で2回出演はありですか？<span class="emoji">🤔</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        はい！可能です<span class="emoji">👍</span><br><br>
+                        両方のイベントの魅力を体験していただけるので、ぜひご検討ください！<span class="emoji">✨</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        他のイベントもあり、時間調整は可能ですか？<span class="emoji">📅</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        備考に記載いただければ最大限配慮させていただきます<span class="emoji">🙏</span><br><br>
+                        できる限りスケジュール調整をサポートしますので、安心してご相談ください！<span class="emoji">💪</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message user">
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        エントリーします！<span class="emoji">🎉</span>
+                    </div>
+                </div>
+                <div class="message-avatar">🎸</div>
+            </div>
+
+            <div class="message admin">
+                <div class="message-avatar">🎵</div>
+                <div class="message-wrapper">
+                    <div class="message-content">
+                        ありがとうございます！<span class="emoji">🙌</span><br><br>
+                        
+                        エントリーフォーム2つをご用意しております！<br>
+                        希望するイベントのフォームからお申し込みください<span class="emoji">📝</span><br><br>
+                        
+                        <strong>⚡ LIVE RUSHの応募</strong><br>
+                        <a href="https://forms.gle/jiz896VFUrzThVXg9" class="cta-button" target="_blank">
+                            <span class="emoji">📰</span> RUSHエントリー
+                        </a><br><br>
+                        
+                        <strong>🌟 LIVE FES＋の応募</strong><br>
+                        <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="cta-button" target="_blank">
+                            <span class="emoji">📺</span> FES＋エントリー
+                        </a><br><br>
+                        
+                        皆様のエントリーをお待ちしております！<span class="emoji">🎤</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // メッセージを順次表示するアニメーション
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message');
+            let currentIndex = 0;
+            
+            // 初期表示（最初の6メッセージを自動表示）
+            function showInitialMessages() {
+                if (currentIndex < Math.min(6, messages.length)) {
+                    messages[currentIndex].classList.add('show');
+                    currentIndex++;
+                    setTimeout(showInitialMessages, 300);
+                } else {
+                    // 残りのメッセージにIntersection Observerを設定
+                    setupScrollAnimation();
+                }
+            }
+            
+            // スクロール連動アニメーション
+            function setupScrollAnimation() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('show');
+                        }
+                    });
+                }, {
+                    threshold: 0.3,
+                    rootMargin: '50px'
+                });
+                
+                // 未表示のメッセージを監視
+                for (let i = currentIndex; i < messages.length; i++) {
+                    observer.observe(messages[i]);
+                }
+            }
+            
+            // 初期表示開始
+            setTimeout(showInitialMessages, 500);
+        });
+
+        // CTAボタンのクリック追跡
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // アナリティクス等のトラッキングコードをここに追加
+                console.log('CTA clicked:', this.href);
+            });
+        });
+    </script>
+</body>
+</html>
