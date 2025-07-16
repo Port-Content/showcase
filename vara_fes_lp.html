@@ -62,7 +62,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 80px 30px 30px;
+            padding: 60px 30px 30px;
             opacity: 0;
             transform: translateX(100%);
             transition: all 0.3s ease;
@@ -550,7 +550,16 @@
                 !e.target.closest('.navigation-dots') && 
                 !e.target.closest('a') && 
                 !e.target.closest('.cta-button')) {
-                nextSlide();
+                
+                // 画面の左半分をクリックしたら前のスライド、右半分なら次のスライド
+                const clickX = e.clientX;
+                const screenWidth = window.innerWidth;
+                
+                if (clickX < screenWidth / 2) {
+                    previousSlide();
+                } else {
+                    nextSlide();
+                }
             }
         });
 
