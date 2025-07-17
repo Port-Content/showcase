@@ -35,6 +35,39 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-cta-button {
+            background: linear-gradient(45deg, #06c755, #4ECDC4);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(6, 199, 85, 0.2);
+            white-space: nowrap;
+        }
+
+        .header-cta-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
+        }
+
+        .header-cta-button.rush {
+            background: linear-gradient(45deg, #43cea2, #185a9d);
         }
 
         .profile-img {
@@ -280,6 +313,19 @@
             .message.user .message-content {
                 width: 280px; /* スマホでの固定幅 */
             }
+
+            .header {
+                padding: 8px 12px;
+            }
+
+            .header-buttons {
+                gap: 4px;
+            }
+
+            .header-cta-button {
+                padding: 6px 8px;
+                font-size: 10px;
+            }
             
             .messages {
                 padding: 16px 12px;
@@ -320,10 +366,20 @@
 <body>
     <div class="chat-container">
         <div class="header">
-            <div class="profile-img">🎵</div>
-            <div class="header-info">
-                <div class="header-name">アイチャレイベント運営</div>
-                <div class="online-status">オンライン</div>
+            <div class="header-left">
+                <div class="profile-img">🎵</div>
+                <div class="header-info">
+                    <div class="header-name">アイチャレ運営</div>
+                    <div class="online-status">オンライン</div>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <a href="https://forms.gle/jiz896VFUrzThVXg9" class="header-cta-button rush" target="_blank">
+                    ⚡ RUSH エントリー
+                </a>
+                <a href="https://forms.gle/vNT4ccKcPsXfQMaF9" class="header-cta-button" target="_blank">
+                    🌟 FES＋エントリー
+                </a>
             </div>
         </div>
 
@@ -444,8 +500,8 @@
                 <div class="message-avatar">🎵</div>
                 <div class="message-wrapper">
                     <div class="message-content">
-                        <span class="emoji">🏟️</span> <strong>KMAパラダイスホール</strong><br>
-                        （旧フォーライフライブホール）<br><br>
+                        <span class="emoji">🏟️</span> <strong>KMAパラダイスホール(国立音楽院)</strong><br>
+                        ※旧フォーライフライブホール<br><br>
                         
                         <div class="info-section">
                             <span class="emoji">🚇</span> <strong>アクセス</strong><br>
@@ -483,6 +539,9 @@
                             
                             <span class="highlight">後方</span><br>
                             2,000円＋1ドリンク<br><br>
+                            
+                            <span class="highlight">当日券</span><br>
+                            上記＋700円<br><br>
                             
                             ※両イベント共通料金です<span class="emoji">💡</span>
                         </div>
@@ -543,7 +602,7 @@
                             ・集客ノルマなしで気軽に参加したい<br>
                             ・雑誌掲載のチャンスを狙いたい<br>
                             ・昼の時間帯が都合良い<br>
-                            ・他のバンドと競い合いたい<br><br>
+                            ・他のアイドルさんと競い合いたい（雑誌掲載）<br><br>
                             
                             <strong>🌟 LIVE FES＋がおすすめの方</strong><br>
                             ・PR番組でファンを増やしたい<br>
