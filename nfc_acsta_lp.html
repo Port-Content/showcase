@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFCアクスタ - グッズが"体験"に進化する</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', sans-serif;
+            line-height: 1.7;
+            color: #2c5aa0;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #e3f2fd 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Floating crystal particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.7;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .particle:nth-child(1) { 
+            width: 25px; height: 25px; 
+            background: linear-gradient(135deg, rgba(129, 212, 250, 0.4), rgba(79, 195, 247, 0.6)); 
+            top: 15%; left: 10%; animation-delay: 0s; 
+        }
+        .particle:nth-child(2) { 
+            width: 20px; height: 20px; 
+            background: linear-gradient(135deg, rgba(179, 229, 252, 0.5), rgba(129, 212, 250, 0.7)); 
+            top: 65%; left: 25%; animation-delay: 1.5s; 
+        }
+        .particle:nth-child(3) { 
+            width: 30px; height: 30px; 
+            background: linear-gradient(135deg, rgba(227, 242, 253, 0.6), rgba(179, 229, 252, 0.8)); 
+            top: 35%; left: 75%; animation-delay: 3s; 
+        }
+        .particle:nth-child(4) { 
+            width: 18px; height: 18px; 
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.4), rgba(41, 182, 246, 0.6)); 
+            top: 80%; left: 65%; animation-delay: 4.5s; 
+        }
+        .particle:nth-child(5) { 
+            width: 22px; height: 22px; 
+            background: linear-gradient(135deg, rgba(129, 212, 250, 0.5), rgba(227, 242, 253, 0.7)); 
+            top: 45%; left: 55%; animation-delay: 6s; 
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.7; }
+            25% { transform: translateY(-25px) translateX(15px) rotate(90deg); opacity: 0.9; }
+            50% { transform: translateY(-50px) translateX(-15px) rotate(180deg); opacity: 0.6; }
+            75% { transform: translateY(-25px) translateX(10px) rotate(270deg); opacity: 0.8; }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #e3f2fd 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
+            color: #1565c0;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 60px 60px;
+            animation: sparkle 20s linear infinite;
+            opacity: 0.6;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translate(-60px, -60px) rotate(0deg); }
+            100% { transform: translate(60px, 60px) rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 40px;
+            text-shadow: 0 4px 20px rgba(21, 101, 192, 0.3);
+            animation: bounceInDown 1.2s ease-out;
+            color: #1565c0;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(45deg, #0277bd, #29b6f6, #81d4fa, #29b6f6, #0277bd);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        .hero h1 .normal-text {
+            color: #1565c0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes bounceInDown {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, -100px, 0) scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: translate3d(0, 20px, 0) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            font-size: 2rem;
+            opacity: 0.8;
+            color: #1565c0;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Main Content */
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px 40px 0 0;
+            margin-top: -40px;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 -20px 60px rgba(41, 182, 246, 0.2);
+            border-top: 3px solid rgba(129, 212, 250, 0.5);
+        }
+
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #81d4fa, #29b6f6, #81d4fa, transparent);
+            opacity: 0.6;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #0277bd, #29b6f6, #81d4fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: slideInScale 1s ease-out;
+        }
+
+        .section-title::after {
+            content: '💎';
+            position: absolute;
+            right: -40px;
+            top: -10px;
+            animation: sparkleRotate 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(129, 212, 250, 0.5));
+        }
+
+        @keyframes sparkleRotate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        @keyframes slideInScale {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(129, 212, 250, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out;
+            border: 2px solid rgba(129, 212, 250, 0.3);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(129, 212, 250, 0.1), rgba(79, 195, 247, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.3s;
+            animation: crystalShine 4s ease-in-out infinite;
+        }
+
+        @keyframes crystalShine {
+            0%, 100% { transform: rotate(0deg) scale(0); opacity: 0; }
+            50% { transform: rotate(180deg) scale(1); opacity: 0.3; }
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover::after {
+            opacity: 0.4;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(129, 212, 250, 0.3);
+            border-color: #29b6f6;
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: iconFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(129, 212, 250, 0.3));
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-8px) rotate(-3deg) scale(1.05); }
+            50% { transform: translateY(-5px) rotate(0deg) scale(1.1); }
+            75% { transform: translateY(-8px) rotate(3deg) scale(1.05); }
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1565c0;
+            background: linear-gradient(135deg, #0277bd, #29b6f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glass-like specs table */
+        .specs-table {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(129, 212, 250, 0.2);
+            margin: 40px 0;
+            border: 2px solid rgba(129, 212, 250, 0.3);
+            position: relative;
+        }
+
+        .specs-table::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: tableShimmer 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes tableShimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .specs-table table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 2;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 25px;
+            text-align: left;
+            border-bottom: 2px solid rgba(129, 212, 250, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .specs-table th {
+            background: linear-gradient(135deg, #0277bd, #29b6f6);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .specs-table tr:hover {
+            background: linear-gradient(135deg, rgba(227, 242, 253, 0.5), rgba(179, 229, 252, 0.3));
+            transform: scale(1.01);
+        }
+
+        /* Crystal-like profit cards */
+        .profit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .profit-card {
+            background: linear-gradient(135deg, rgba(129, 212, 250, 0.9), rgba(79, 195, 247, 0.8), rgba(41, 182, 246, 0.9));
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(129, 212, 250, 0.4);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: crystalGlow 5s ease-in-out infinite;
+        }
+
+        .profit-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            animation: crystalShimmer 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .profit-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes crystalShimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes crystalGlow {
+            0%, 100% { 
+                box-shadow: 0 15px 50px rgba(129, 212, 250, 0.4);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 20px 60px rgba(129, 212, 250, 0.6);
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        .profit-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 25px 70px rgba(129, 212, 250, 0.5);
+        }
+
+        .profit-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            animation: numberFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes numberFloat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .profit-label {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Special design section */
+        .special-design-section {
+            margin: 60px 0;
+        }
+
+        .special-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1565c0;
+            position: relative;
+            animation: slideInScale 1s ease-out;
+        }
+
+        .special-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(129, 212, 250, 0.2) 0%, transparent 70%);
+            border-radius: 20px;
+            z-index: -1;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+        }
+
+        .design-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .design-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(129, 212, 250, 0.25);
+            border: 2px solid rgba(129, 212, 250, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .design-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #81d4fa, #29b6f6, #0277bd, #29b6f6, #81d4fa);
+            background-size: 300% 300%;
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderShift 4s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .design-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes borderShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .design-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(129, 212, 250, 0.35);
+        }
+
+        .design-card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            text-align: center;
+            animation: iconBounce 4s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(129, 212, 250, 0.4));
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-8px) scale(1.05); }
+            50% { transform: translateY(-5px) scale(1.1); }
+            75% { transform: translateY(-8px) scale(1.05); }
+        }
+
+        .design-card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .design-card-content {
+            color: #2c5aa0;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .interactive-highlight {
+            background: linear-gradient(135deg, rgba(129, 212, 250, 0.9), rgba(79, 195, 247, 0.8));
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(129, 212, 250, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: crystalPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes crystalPulse {
+            0%, 100% { 
+                background: linear-gradient(135deg, rgba(129, 212, 250, 0.9), rgba(79, 195, 247, 0.8));
+            }
+            50% { 
+                background: linear-gradient(135deg, rgba(79, 195, 247, 0.9), rgba(129, 212, 250, 0.8));
+            }
+        }
+
+        .interactive-highlight::before {
+            content: '🎵';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            animation: musicNote 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes musicNote {
+            0%, 100% { transform: rotate(-10deg) scale(1); opacity: 0.8; }
+            50% { transform: rotate(10deg) scale(1.2); opacity: 1; }
+        }
+
+        /* Shoport section */
+        .shoport-section {
+            background: linear-gradient(135deg, rgba(227, 242, 253, 0.8), rgba(179, 229, 252, 0.6));
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 30px;
+            margin: 60px 0;
+            border: 2px solid rgba(129, 212, 250, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shoport-section::before {
+            content: '🚀';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            animation: rocketFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(129, 212, 250, 0.5));
+        }
+
+        @keyframes rocketFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* Crystal FAQ */
+        .faq-item {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(129, 212, 250, 0.2);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 2px solid rgba(129, 212, 250, 0.2);
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .faq-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 50px rgba(129, 212, 250, 0.3);
+            border-color: #29b6f6;
+        }
+
+        .faq-question {
+            background: linear-gradient(135deg, #0277bd, #29b6f6);
+            color: white;
+            padding: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .faq-question::after {
+            content: '💎';
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        .faq-question.active::after {
+            transform: translateY(-50%) rotate(180deg) scale(1.3);
+        }
+
+        .faq-question:hover {
+            background: linear-gradient(135deg, #29b6f6, #81d4fa);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: linear-gradient(135deg, rgba(227, 242, 253, 0.5), rgba(255, 255, 255, 0.8));
+        }
+
+        .faq-answer.active {
+            max-height: 300px;
+            padding: 25px;
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Crystal process steps */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(129, 212, 250, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(129, 212, 250, 0.3);
+        }
+
+        .process-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0277bd, #29b6f6, #81d4fa);
+            animation: progressFlow 4s ease-in-out infinite;
+        }
+
+        @keyframes progressFlow {
+            0% { transform: translateX(-100%); opacity: 0.5; }
+            50% { transform: translateX(0%); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0.5; }
+        }
+
+        .process-step:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 60px rgba(129, 212, 250, 0.3);
+            border-color: #29b6f6;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0277bd, #29b6f6);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(129, 212, 250, 0.4);
+            animation: stepGlow 4s ease-in-out infinite;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes stepGlow {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 10px 30px rgba(129, 212, 250, 0.4);
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 15px 40px rgba(129, 212, 250, 0.6);
+            }
+        }
+
+        /* Crystal CTA Section */
+        .cta {
+            background: linear-gradient(135deg, #e3f2fd 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
+            color: #1565c0;
+            padding: 100px 0;
+            text-align: center;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="crystals" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.4)"/><circle cx="10" cy="10" r="1" fill="rgba(129,212,250,0.3)"/><circle cx="40" cy="15" r="2" fill="rgba(79,195,247,0.3)"/></pattern></defs><rect width="200" height="200" fill="url(%23crystals)"/></svg>');
+            animation: crystalTwinkle 12s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes crystalTwinkle {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50px) translateY(-50px); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #0277bd;
+            padding: 20px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 30px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 10px 40px rgba(129, 212, 250, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(129, 212, 250, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(129, 212, 250, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(129, 212, 250, 0.4);
+            background: rgba(255, 255, 255, 1);
+            border-color: #29b6f6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0;
+                min-height: 80vh;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .features, .profit-grid, .process-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .particle {
+                display: none;
+            }
+            
+            .section-title::after {
+                right: -20px;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(227, 242, 253, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #81d4fa, #29b6f6);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #29b6f6, #0277bd);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Crystal Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1><span class="gradient-text">グッズが"体験"に進化する。</span><br><span class="normal-text">次世代（NFC）アクスタ登場。</span></h1>
+            </div>
+        </div>
+        <div class="scroll-indicator">🔽</div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Experience Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎙️ アクスタが、グッズから"体験"へ。</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-title">簡単タップで再生</div>
+                        <p>スマホでかざすと、推しからの「おはよう♡」ボイスが再生</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎲</div>
+                        <div class="feature-title">ドキドキガチャ形式</div>
+                        <p>どのメンバーが出るかわからない、ドキドキのガチャ形式</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✍️</div>
+                        <div class="feature-title">ダブルチャンス</div>
+                        <p>さらに10％の確率で【直筆サイン入り】が当たるダブルチャンスも</p>
+                    </div>
+                </div>
+                <div class="interactive-highlight" style="margin-top: 60px;">
+                    <p style="font-size: 1.3rem; font-weight: bold;">💡 ファンが「推しだけ欲しい人」も「全員集めたい人」も楽しめる、設計にこだわった新時代アクスタです。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specifications Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">📦 商品仕様</h2>
+                <div class="specs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>商品名</strong></td>
+                                <td>NFC入りアクスタガチャ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>サイズ</strong></td>
+                                <td>10cm × 10cm</td>
+                            </tr>
+                            <tr>
+                                <td><strong>種類</strong></td>
+                                <td>全10種（各100個）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>内容物</strong></td>
+                                <td>NFC内蔵アクスタ＋銀色封筒封入</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NFC再生内容</strong></td>
+                                <td>ボイス・動画・画像・URL いずれも対応可能</td>
+                            </tr>
+                            <tr>
+                                <td><strong>サイン仕様</strong></td>
+                                <td>メンバー別に直筆サイン入りをランダム封入（10％）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>納期</strong></td>
+                                <td>デザイン・音声データ入稿から約20営業日</td>
+                            </tr>
+                            <tr>
+                                <td><strong>最小ロット</strong></td>
+                                <td>1,000個（10種 × 各100個）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profit Model Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">💰 利益モデル</h2>
+                <div class="profit-grid">
+                    <div class="profit-card">
+                        <div class="profit-number">900円</div>
+                        <div class="profit-label">卸価格／個</div>
+                    </div>
+                    <div class="profit-card">
+                        <div class="profit-number">2,000円</div>
+                        <div class="profit-label">小売想定価格／個</div>
+                    </div>
+                    <div class="profit-card">
+                        <div class="profit-number">1,100円</div>
+                        <div class="profit-label">1個あたり粗利</div>
+                    </div>
+                </div>
+                
+                <div class="specs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>販売数</th>
+                                <th>売上額</th>
+                                <th>粗利（目安）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>410個</td>
+                                <td>約82万円</td>
+                                <td>損益分岐点</td>
+                            </tr>
+                            <tr>
+                                <td>500個</td>
+                                <td>100万円</td>
+                                <td>約＋10万円</td>
+                            </tr>
+                            <tr>
+                                <td>1,000個</td>
+                                <td>200万円</td>
+                                <td>約＋110万円</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎯 活用シーンいろいろ</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎤</div>
+                        <div class="feature-title">ライブ物販</div>
+                        <p>ライブ物販でのランダムガチャ販売</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎁</div>
+                        <div class="feature-title">特典グッズ</div>
+                        <p>イベント参加特典／予約購入特典</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛒</div>
+                        <div class="feature-title">限定販売</div>
+                        <p>クラファン返礼品や限定通販アイテム</p>
+                    </div>
+                </div>
+
+                <div class="special-design-section">
+                    <h3 class="special-title">🎁 バラ売りでもコンプでも楽しめる設計</h3>
+                    <div class="design-cards">
+                        <div class="design-card">
+                            <div class="design-card-icon">🎤</div>
+                            <div class="design-card-title">オリジナルボイス収録</div>
+                            <div class="design-card-content">メンバー別に異なる"オリジナルボイス"を収録</div>
+                        </div>
+                        <div class="design-card">
+                            <div class="design-card-icon">📦</div>
+                            <div class="design-card-title">即座にランダム販売</div>
+                            <div class="design-card-content">銀色の袋に入れて納品のためすぐにランダム販売が可能</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complete Set Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🎁 ネット限定コンプリートセット</h2>
+                <div style="background: linear-gradient(135deg, rgba(129, 212, 250, 0.9), rgba(79, 195, 247, 0.8)); backdrop-filter: blur(15px); color: white; padding: 50px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(129, 212, 250, 0.4); position: relative; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3);">
+                    <div style="position: absolute; top: 20px; right: 30px; font-size: 2rem; animation: musicNote 3s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));">🌐</div>
+                    <h3 style="font-size: 2rem; margin-bottom: 30px; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">NFCアクスタ 全10種コンプリートBOX</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin: 30px 0;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px;">全10種</div>
+                            <div style="font-size: 1.1rem;">各1体</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px;">20,000円</div>
+                            <div style="font-size: 1.1rem;">税込（2,000円 × 10体）</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px;">送料</div>
+                            <div style="font-size: 1.1rem;">全国一律1500円</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 30px; opacity: 0.95; font-size: 1.1rem;">🎯 Shoportも活用してコンプリートセットも販売可能です。</p>
+                </div>
+
+                <div class="shoport-section">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 20px; color: #1565c0;">Shoportとは?</h3>
+                    <p style="margin-bottom: 20px; color: #2c5aa0;">販売・倉庫管理・配送を一気通貫で行なうサービスとなります。</p>
+                    <p style="margin-bottom: 20px; color: #2c5aa0; font-weight: bold;">販売価格の90％を月末締め翌月末払いで自動入金をします。</p>
+                    <p style="color: #2c5aa0;">リアルでの販売に加えて手間のかかるコンプリートセットもご検討ください。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🛠️ 導入の流れ</h2>
+                <div class="process-grid">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #1565c0;">デザイン＆データ準備</h4>
+                        <p>デザイン＆ボイスデータをご用意ください（10種分）</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #1565c0;">販売方針ヒアリング</h4>
+                        <p>ご希望の封入方法・販売方針をヒアリング</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #1565c0;">製作・納品</h4>
+                        <p>入稿から約20営業日で納品</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #1565c0;">サイン記入</h4>
+                        <p>ランダムサイン入れをする場合は実施</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">❓ よくある質問</h2>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(0)">
+                        Q. NFCって難しいですか？
+                    </div>
+                    <div class="faq-answer">
+                        設定や登録はすべてこちらで対応。スマホをかざすだけで簡単に再生できます。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(1)">
+                        Q. 音声や動画はどう用意すれば？
+                    </div>
+                    <div class="faq-answer">
+                        スマホで録音・録画したデータでもOK。自然な雰囲気が逆に"刺さります"。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(2)">
+                        Q. サイン作業はどれくらい負担？
+                    </div>
+                    <div class="faq-answer">
+                        1人100枚など。記入時間の目安は30～60分程度です。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(3)">
+                        Q. 小規模グループでも導入できますか？
+                    </div>
+                    <div class="faq-answer">
+                        はい、例えば5人で5種各200個ずつでもOKです。
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(4)">
+                        Q. 在庫が余った場合は？
+                    </div>
+                    <div class="faq-answer">
+                        通販や特典イベントで再活用可能。分納対応も可能ですのでご相談ください。shoportやTalkportで販促のご提案も柔軟にします。
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 25px; text-shadow: 0 2px 15px rgba(21, 101, 192, 0.3);">📩 お問い合わせ・ご相談はこちら</h2>
+                <div style="margin-bottom: 30px;">
+                    <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 10px;">🚀 お気軽にご連絡ください。</p>
+                    <p style="font-size: 1.2rem; opacity: 0.8; margin-bottom: 10px;">「ちょっと気になる」から「すぐに始めたい」まで、</p>
+                    <p style="font-size: 1.2rem; opacity: 0.8;">あなたのグループに合った形をご提案します！</p>
+                </div>
+                <a href="mailto:contents@theport.inc" class="cta-button">
+                    <span style="position: relative; z-index: 2;">📧 contents@theport.inc</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // FAQ Toggle with enhanced animation
+        function toggleFAQ(index) {
+            const questions = document.querySelectorAll('.faq-question');
+            const answers = document.querySelectorAll('.faq-answer');
+            
+            // Close all other FAQs
+            questions.forEach((q, i) => {
+                if (i !== index) {
+                    q.classList.remove('active');
+                    answers[i].classList.remove('active');
+                }
+            });
+            
+            // Toggle selected FAQ
+            questions[index].classList.toggle('active');
+            answers[index].classList.toggle('active');
+            
+            // Add pulse effect
+            questions[index].style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                questions[index].style.transform = '';
+            }, 200);
+        }
+
+        // Enhanced scroll animations
+        function createScrollObserver() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        
+                        // Add stagger effect to children
+                        const children = entry.target.children;
+                        Array.from(children).forEach((child, index) => {
+                            setTimeout(() => {
+                                child.style.opacity = '1';
+                                child.style.transform = 'translateY(0)';
+                            }, index * 100);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            // Observe elements
+            document.querySelectorAll('.feature-card, .profit-card, .process-step, .faq-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                observer.observe(el);
+            });
+        }
+
+        // Initialize scroll observer when page loads
+        window.addEventListener('load', createScrollObserver);
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Add random animation delays to particles
+        document.querySelectorAll('.particle').forEach((particle, index) => {
+            particle.style.animationDelay = `${index * 1.2}s`;
+            particle.style.animationDuration = `${8 + Math.random() * 4}s`;
+        });
+
+        // Interactive hover effects
+        document.querySelectorAll('.feature-card, .profit-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.zIndex = '';
+            });
+        });
+
+        // Smooth scroll for scroll indicator
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.main-content').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Add crystal ripple effect to CTA button
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'radial-gradient(circle, rgba(129, 212, 250, 0.6), transparent)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'crystalRipple 0.8s linear';
+            ripple.style.pointerEvents = 'none';
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 800);
+        });
+
+        // Add random crystal sparkles
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = '💎';
+            sparkle.style.position = 'fixed';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            sparkle.style.opacity = '0.6';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '1';
+            sparkle.style.animation = 'sparkleFloat 3s ease-out forwards';
+            sparkle.style.filter = 'drop-shadow(0 0 10px rgba(129, 212, 250, 0.5))';
+            
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 3000);
+        }
+
+        // Create sparkles occasionally
+        setInterval(createSparkle, 5000);
+    </script>
+
+    <style>
+        @keyframes crystalRipple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 0.6;
+                transform: translateY(0) rotate(0deg) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-50px) rotate(180deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg) scale(0.5);
+            }
+        }
+    </style>
+</body>
+</html>
