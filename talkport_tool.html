@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talkport枠作成ツール</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #1e1e2f 0%, #2a2a3e 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e2e8f0;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .mode-switcher {
+            display: flex;
+            background: #16213e;
+            border-radius: 15px;
+            margin: 30px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #94a3b8;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .mode-content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #374151;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #1f2937;
+            color: #e2e8f0;
+        }
+
+        .form-group select option {
+            background: #1f2937;
+            color: #e2e8f0;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .summary-item {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .frame-list {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #1f2937;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .frame-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.2s ease;
+        }
+
+        .frame-item:hover {
+            background: #374151;
+        }
+
+        .frame-item:last-child {
+            border-bottom: none;
+        }
+
+        .frame-number {
+            font-weight: 600;
+            color: #ffffff;
+            min-width: 80px;
+            font-size: 1.1rem;
+        }
+
+        .frame-time {
+            color: #60a5fa;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .mode-content {
+                padding: 20px;
+            }
+            
+            .time-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Talkport枠作成ツール</h1>
+            <p>枠数や所要時間を手軽に算出・表示</p>
+        </div>
+
+        <div class="mode-switcher">
+            <button class="mode-btn active" onclick="switchMode('forward')">🧮 順算モード</button>
+            <button class="mode-btn" onclick="switchMode('reverse')">🔁 逆算モード</button>
+        </div>
+
+        <!-- 順算モード -->
+        <div id="forward-mode" class="mode-content">
+            <div class="time-inputs">
+                <div class="form-group">
+                    <label for="start-time">カレンダー開始時間</label>
+                    <input type="datetime-local" id="start-time" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="end-time">終了時間</label>
+                    <input type="datetime-local" id="end-time" step="1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="frame-duration-forward">時間枠（1枠あたりの時間）</label>
+                <select id="frame-duration-forward">
+                    <option value="15">15秒</option>
+                    <option value="30">30秒</option>
+                    <option value="60" selected>1分</option>
+                    <option value="90">90秒</option>
+                    <option value="120">2分</option>
+                    <option value="180">3分</option>
+                    <option value="240">4分</option>
+                    <option value="300">5分</option>
+                    <option value="360">6分</option>
+                    <option value="420">7分</option>
+                    <option value="480">8分</option>
+                    <option value="540">9分</option>
+                    <option value="600">10分</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interval-forward">インターバル（枠と枠の間の空き時間）</label>
+                <select id="interval-forward">
+                    <option value="0">0秒</option>
+                    <option value="5">5秒</option>
+                    <option value="15" selected>15秒</option>
+                    <option value="30">30秒</option>
+                    <option value="60">1分</option>
+                </select>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateForward()">📊 表示</button>
+        </div>
+
+        <!-- 逆算モード -->
+        <div id="reverse-mode" class="mode-content hidden">
+            <div class="form-group">
+                <label for="reverse-start-time">開始時間（枠リスト用）</label>
+                <input type="datetime-local" id="reverse-start-time" step="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="frame-count">枠数</label>
+                <input type="number" id="frame-count" min="1" placeholder="例: 10">
+            </div>
+            
+            <div class="form-group">
+                <label for="frame-duration-reverse">時間枠（1枠あたりの時間）</label>
+                <select id="frame-duration-reverse">
+                    <option value="15">15秒</option>
+                    <option value="30">30秒</option>
+                    <option value="60" selected>1分</option>
+                    <option value="90">90秒</option>
+                    <option value="120">2分</option>
+                    <option value="180">3分</option>
+                    <option value="240">4分</option>
+                    <option value="300">5分</option>
+                    <option value="360">6分</option>
+                    <option value="420">7分</option>
+                    <option value="480">8分</option>
+                    <option value="540">9分</option>
+                    <option value="600">10分</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interval-reverse">インターバル（枠と枠の間の空き時間）</label>
+                <select id="interval-reverse">
+                    <option value="0">0秒</option>
+                    <option value="5">5秒</option>
+                    <option value="15" selected>15秒</option>
+                    <option value="30">30秒</option>
+                    <option value="60">1分</option>
+                </select>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateReverse()">🔄 逆算</button>
+        </div>
+
+        <!-- 結果表示 -->
+        <div id="results" class="results">
+            <h3 id="results-title">📋 計算結果</h3>
+            <div id="results-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // 初期設定：次の整数時間と1時間後を設定
+        function initializeTimes() {
+            const now = new Date();
+            
+            // 次の整数時間に切り上げ（例：16:30 → 17:00）
+            const nextHour = new Date(now);
+            nextHour.setHours(now.getHours() + 1, 0, 0, 0);
+            
+            const oneHourAfterNext = new Date(nextHour.getTime() + 60 * 60 * 1000);
+            
+            document.getElementById('start-time').value = formatDateTimeLocal(nextHour);
+            document.getElementById('end-time').value = formatDateTimeLocal(oneHourAfterNext);
+            document.getElementById('reverse-start-time').value = formatDateTimeLocal(nextHour);
+        }
+
+        function formatDateTimeLocal(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('ja-JP', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function formatDuration(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            let result = '';
+            if (hours > 0) result += `${hours}時間`;
+            if (minutes > 0) result += `${minutes}分`;
+            if (secs > 0 || result === '') result += `${secs}秒`;
+            
+            return result;
+        }
+
+        function switchMode(mode) {
+            const forwardMode = document.getElementById('forward-mode');
+            const reverseMode = document.getElementById('reverse-mode');
+            const results = document.getElementById('results');
+            const buttons = document.querySelectorAll('.mode-btn');
+            
+            // ボタンの状態を更新
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // モードを切り替え
+            if (mode === 'forward') {
+                forwardMode.classList.remove('hidden');
+                reverseMode.classList.add('hidden');
+            } else {
+                forwardMode.classList.add('hidden');
+                reverseMode.classList.remove('hidden');
+            }
+            
+            // 結果を非表示
+            results.classList.remove('show');
+        }
+
+        function calculateForward() {
+            const startTime = new Date(document.getElementById('start-time').value);
+            const endTime = new Date(document.getElementById('end-time').value);
+            const frameDuration = parseInt(document.getElementById('frame-duration-forward').value);
+            const interval = parseInt(document.getElementById('interval-forward').value);
+            
+            if (!startTime || !endTime) {
+                alert('開始時間と終了時間を入力してください。');
+                return;
+            }
+            
+            if (endTime <= startTime) {
+                alert('終了時間は開始時間より後に設定してください。');
+                return;
+            }
+            
+            const totalTimeSeconds = Math.floor((endTime - startTime) / 1000);
+            const frameWithInterval = frameDuration + interval;
+            const frameCount = Math.floor(totalTimeSeconds / frameWithInterval);
+            
+            // 枠リストを生成
+            const frames = [];
+            let currentTime = new Date(startTime);
+            
+            for (let i = 0; i < frameCount; i++) {
+                const frameStart = new Date(currentTime);
+                const frameEnd = new Date(currentTime.getTime() + frameDuration * 1000);
+                
+                frames.push({
+                    number: i + 1,
+                    start: frameStart,
+                    end: frameEnd
+                });
+                
+                currentTime = new Date(currentTime.getTime() + frameWithInterval * 1000);
+            }
+            
+            displayForwardResults(frameCount, frames, totalTimeSeconds);
+        }
+
+        function calculateReverse() {
+            const frameCount = parseInt(document.getElementById('frame-count').value);
+            const frameDuration = parseInt(document.getElementById('frame-duration-reverse').value);
+            const interval = parseInt(document.getElementById('interval-reverse').value);
+            const startTime = new Date(document.getElementById('reverse-start-time').value);
+            
+            if (!frameCount || frameCount <= 0) {
+                alert('枠数を正しく入力してください。');
+                return;
+            }
+            
+            if (!startTime) {
+                alert('開始時間を入力してください。');
+                return;
+            }
+            
+            const totalSeconds = (frameDuration * frameCount) + (interval * (frameCount - 1));
+            
+            // 枠リストを生成
+            const frames = [];
+            let currentTime = new Date(startTime);
+            const frameWithInterval = frameDuration + interval;
+            
+            for (let i = 0; i < frameCount; i++) {
+                const frameStart = new Date(currentTime);
+                const frameEnd = new Date(currentTime.getTime() + frameDuration * 1000);
+                
+                frames.push({
+                    number: i + 1,
+                    start: frameStart,
+                    end: frameEnd
+                });
+                
+                currentTime = new Date(currentTime.getTime() + frameWithInterval * 1000);
+            }
+            
+            displayReverseResults(totalSeconds, frameCount, frameDuration, interval, frames);
+        }
+
+        function displayForwardResults(frameCount, frames, totalTimeSeconds) {
+            const resultsContent = document.getElementById('results-content');
+            
+            let html = `
+                <div class="summary">
+                    <div class="summary-item">
+                        枠数: <span class="summary-value">${frameCount}枠</span>
+                    </div>
+                    <div class="summary-item">
+                        総時間: <span class="summary-value">${formatDuration(totalTimeSeconds)}</span>
+                    </div>
+                </div>
+            `;
+            
+            if (frames.length > 0) {
+                html += `
+                    <h4 style="margin-bottom: 15px; color: #e2e8f0; font-size: 1.2rem;">枠リスト</h4>
+                    <div class="frame-list">
+                `;
+                
+                frames.forEach(frame => {
+                    html += `
+                        <div class="frame-item">
+                            <span class="frame-number">第${frame.number}枠</span>
+                            <span class="frame-time">${formatTime(frame.start)} - ${formatTime(frame.end)}</span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            resultsContent.innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        function displayReverseResults(totalSeconds, frameCount, frameDuration, interval, frames) {
+            const resultsContent = document.getElementById('results-content');
+            
+            let html = `
+                <div class="summary">
+                    <div class="summary-item">
+                        総時間: <span class="summary-value">${formatDuration(totalSeconds)}</span>
+                    </div>
+                    <div class="summary-item">
+                        枠数: <span class="summary-value">${frameCount}枠</span>
+                    </div>
+                    <div class="summary-item">
+                        1枠の時間: <span class="summary-value">${formatDuration(frameDuration)}</span>
+                    </div>
+                    <div class="summary-item">
+                        インターバル: <span class="summary-value">${formatDuration(interval)}</span>
+                    </div>
+                </div>
+            `;
+            
+            if (frames && frames.length > 0) {
+                html += `
+                    <h4 style="margin-bottom: 15px; color: #e2e8f0; font-size: 1.2rem;">枠リスト</h4>
+                    <div class="frame-list">
+                `;
+                
+                frames.forEach(frame => {
+                    html += `
+                        <div class="frame-item">
+                            <span class="frame-number">第${frame.number}枠</span>
+                            <span class="frame-time">${formatTime(frame.start)} - ${formatTime(frame.end)}</span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            resultsContent.innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        // 初期化
+        window.onload = function() {
+            initializeTimes();
+        };
+    </script>
+</body>
+</html>
