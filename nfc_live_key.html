@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超VIP入場チケット次世代（NFC）アクキー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #0a0a0a 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* グローバルアニメーション */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(60px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceInDown {
+            0% { opacity: 0; transform: translate3d(0, -100px, 0) scale(0.3); }
+            50% { opacity: 1; transform: translate3d(0, 20px, 0) scale(1.05); }
+            100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 5px #ffd700); }
+            50% { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 30px #ffd700); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.4; }
+        }
+
+        /* パーティクル効果 */
+        .particle {
+            position: absolute;
+            color: #ffd700;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            font-size: 1.5rem;
+        }
+
+        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .particle:nth-child(3) { top: 60%; left: 8%; animation-delay: 2s; }
+        .particle:nth-child(4) { bottom: 20%; right: 20%; animation-delay: 3s; }
+
+        /* コンテナ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            animation: bounceInDown 1.5s ease-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700, #ff6b35);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #cccccc;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* ガラス効果コンポーネント */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        /* セクションタイトル */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 4rem 0 2rem;
+            color: #ffd700;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* フィーチャーカード */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        /* テーブルスタイル */
+        .specs-table {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin: 2rem 0;
+        }
+
+        .specs-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table th {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            padding: 1.2rem;
+            font-weight: 700;
+            color: #ffd700;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .specs-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .specs-table tr:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        /* プライシングカード */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 0, 0, 0.3));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .price-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-label {
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ステップガイド */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .step-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            border-radius: 50%;
+            line-height: 50px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        /* FAQ */
+        .faq-container {
+            margin: 3rem 0;
+        }
+
+        .faq-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            cursor: pointer;
+            font-weight: 600;
+            color: #ffd700;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #cccccc;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 200px;
+        }
+
+        /* CTA ボタン */
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .features, .pricing-grid, .process-steps {
+                grid-template-columns: 1fr;
+            }
+            .particle {
+                display: none;
+            }
+        }
+
+        /* スクロールアニメーション */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- パーティクル -->
+    <div class="particle">💎</div>
+    <div class="particle">⚡</div>
+    <div class="particle">🎫</div>
+    <div class="particle">✨</div>
+
+    <!-- ヒーロー -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    <span class="gradient-text">超VIP入場チケット</span><br>
+                    <span style="color: #ffffff;">次世代（NFC）アクキー登場</span>
+                </h1>
+                <p class="hero-subtitle">もう「紙」や「アプリ」だけじゃない。<br>NFC搭載のアクリルキーホルダーがチケットに。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- フィーチャー -->
+    <section id="features" class="container animate-on-scroll">
+        <h2 class="section-title">🎫 革新的な入場体験</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">かざすだけで入場</div>
+                <p>スマホをかざすだけで入場可能。設定や登録は一切不要。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎵</div>
+                <div class="feature-title">限定コンテンツ格納</div>
+                <p>イベント情報、限定ボイス、特典URLなどを格納可能。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <div class="feature-title">永続的な記念品</div>
+                <p>ライブ後も"記念グッズ"として手元に残る特別なアイテム。</p>
+            </div>
+        </div>
+        <div class="glass-card">
+            <p style="text-align: center; font-size: 1.2rem; color: #ffd700;">
+                💡 "推しが詰まった"入場体験を、ファンの手に。
+            </p>
+        </div>
+    </section>
+
+    <!-- 商品仕様 -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">📦 商品仕様</h2>
+        <div class="specs-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>内容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>商品名</td>
+                        <td>NFC入りアクキー型ライブチケット（全10種まで可）</td>
+                    </tr>
+                    <tr>
+                        <td>サイズ</td>
+                        <td>約6cm × 6cm（ナスカン付きアクリルキーホルダー）</td>
+                    </tr>
+                    <tr>
+                        <td>NFC再生内容</td>
+                        <td>入場認証／限定ボイス／画像・動画／URL誘導など</td>
+                    </tr>
+                    <tr>
+                        <td>ロット構成</td>
+                        <td><strong>合計1,000個固定</strong>（例：10種×各100個、5種×各200個）</td>
+                    </tr>
+                    <tr>
+                        <td>封入方法</td>
+                        <td>銀袋や個別パッケージ封入で"ランダム販売"にも対応</td>
+                    </tr>
+                    <tr>
+                        <td>納期</td>
+                        <td>デザイン＆データ入稿から約20営業日</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="glass-card">
+            <p style="text-align: center; color: #ffd700;">
+                🎨 デザイン種数は<strong>最大10種まで</strong>。2〜9種でも発注OK（合計1,000個固定）。
+            </p>
+        </div>
+    </section>
+
+    <!-- 活用例 -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">🎯 活用例</h2>
+        <div class="glass-card">
+            <h3 style="color: #ffd700; margin-bottom: 1rem;">🎤 参考事例：キャパ1500人のワンマンライブ</h3>
+            <p>入場チケットを以下のように分けて販売：</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                <li>1,000枚 → NFCアクキー型チケット（限定ボイス入り／記念用）</li>
+                <li>500枚 → 通常の紙チケット</li>
+            </ul>
+            <p style="color: #ffd700;"><strong>NFC入場者限定で"お礼ボイス"や特典動画が再生される仕組み</strong></p>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎪</div>
+                <div class="feature-title">ファンミーティング</div>
+                <p>卒業公演の記念チケットとして特別感を演出</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎂</div>
+                <div class="feature-title">誕生日イベント</div>
+                <p>プレミアム来場特典として限定感をアップ</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎲</div>
+                <div class="feature-title">ランダム封入</div>
+                <p>演者ごとにランダム → 推しを引くドキドキ体験</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 価格設定 -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">💰 価格設定と収益シミュレーション</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="price-number">2,000円〜</div>
+                <div class="price-label">NFCチケット</div>
+                <p>限定アクキー＋入場権<br>＋限定ボイス／特典URL</p>
+            </div>
+            <div class="pricing-card">
+                <div class="price-number">20,000円</div>
+                <div class="price-label">コンプリートBOX</div>
+                <p>全10種セット（自宅配送）<br>＋スペシャル特典付き</p>
+            </div>
+            <div class="pricing-card">
+                <div class="price-number">1,000円</div>
+                <div class="price-label">通常チケット</div>
+                <p>紙チケットのみ<br>（比較参考価格）</p>
+            </div>
+        </div>
+        
+        <div class="glass-card">
+            <h3 style="color: #ffd700; margin-bottom: 1rem;">💸 利益モデル（1,000個想定）</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+                <div>
+                    <strong style="color: #ffd700;">卸価格</strong><br>
+                    900円／個
+                </div>
+                <div>
+                    <strong style="color: #ffd700;">小売想定価格</strong><br>
+                    2,000円〜
+                </div>
+                <div>
+                    <strong style="color: #ffd700;">損益分岐点</strong><br>
+                    約410個
+                </div>
+                <div>
+                    <strong style="color: #ffd700;">フル販売時</strong><br>
+                    ＋110万円以上の粗利
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shoport連携 -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">🚚 販売・配送もすべておまかせ</h2>
+        <div class="specs-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>詳細</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>サービス名</td>
+                        <td><strong>Shoport（ショポート）</strong></td>
+                    </tr>
+                    <tr>
+                        <td>対応範囲</td>
+                        <td>オンライン販売／在庫管理／決済／配送対応すべて</td>
+                    </tr>
+                    <tr>
+                        <td>入金サイクル</td>
+                        <td>月末締め→翌月末に自動入金</td>
+                    </tr>
+                    <tr>
+                        <td>受取金額</td>
+                        <td><strong>販売価格の80％</strong>（Shoport手数料20％）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="glass-card">
+            <p style="text-align: center; color: #ffd700;">
+                💡 例：2,000円の商品を販売 → 1,600円が自動入金（送料別）
+            </p>
+        </div>
+    </section>
+
+    <!-- 導入フロー -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">🛠️ 導入までの流れ</h2>
+        <div class="process-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-title">デザイン・データ準備</div>
+                <p>最大10種のデザイン＆ボイス・URL等の再生データをご用意ください</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-title">ヒアリング</div>
+                <p>封入形式や販売形式をヒアリング</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-title">製造・納品</div>
+                <p>入稿から約20営業日で納品</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-title">販促支援</div>
+                <p>必要に応じてShoport・Talkportと連携し販促支援も実施</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">❓ よくある質問</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(0)">スマホで再生って難しくない？</div>
+                <div class="faq-answer">かざすだけ。設定や登録はすべてこちらで代行します。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(1)">デザインは何種までOK？</div>
+                <div class="faq-answer">最大10種まで。2〜9種も可です（合計1,000個は固定）。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(2)">小規模イベントでも導入可能？</div>
+                <div class="faq-answer">販売単価と通販連動で十分可能。導入事例も豊富にあります。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(3)">売れ残った場合は？</div>
+                <div class="faq-answer">Shoportでのオンライン販売、Talkport連動企画、次回イベント特典などで再活用できます。</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 拡張オプション -->
+    <section class="container animate-on-scroll">
+        <h2 class="section-title">🔧 拡張オプション</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎁</div>
+                <div class="feature-title">動的コンテンツ</div>
+                <p>イベント終了後にボイスが変化（例：感謝メッセージに切り替え）</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🕐</div>
+                <div class="feature-title">期間限定設定</div>
+                <p>期間限定再生設定（例：入場後1週間のみ）</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <div class="feature-title">特別企画</div>
+                <p>10種再生でシークレット解放などの企画設計も柔軟対応</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 style="color: #ffd700; margin-bottom: 1rem;">📩 お問い合わせ・ご相談はこちら</h2>
+            <p style="margin-bottom: 2rem; font-size: 1.1rem;">「ちょっと気になる」でも大歓迎！<br>あなたのグループ・イベントにぴったりなご提案をいたします。</p>
+            <a href="mailto:contents@theport.inc" class="cta-button">📧 contents@theport.inc</a>
+        </div>
+    </section>
+
+    <script>
+        // FAQトグル
+        function toggleFAQ(index) {
+            const questions = document.querySelectorAll('.faq-question');
+            const answers = document.querySelectorAll('.faq-answer');
+            
+            questions[index].classList.toggle('active');
+            answers[index].classList.toggle('active');
+        }
+
+        // スクロールアニメーション
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // スムーススクロール（ページめくり効果）
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    // より滑らかなスクロール効果
+                    const startPosition = window.pageYOffset;
+                    const targetPosition = target.offsetTop - 50;
+                    const distance = targetPosition - startPosition;
+                    const duration = 1200; // 1.2秒でスクロール
+                    let start = null;
+
+                    function animation(currentTime) {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const run = ease(timeElapsed, startPosition, distance, duration);
+                        window.scrollTo(0, run);
+                        if (timeElapsed < duration) requestAnimationFrame(animation);
+                    }
+
+                    // イージング関数（より自然な動き）
+                    function ease(t, b, c, d) {
+                        t /= d / 2;
+                        if (t < 1) return c / 2 * t * t + b;
+                        t--;
+                        return -c / 2 * (t * (t - 2) - 1) + b;
+                    }
+
+                    requestAnimationFrame(animation);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
