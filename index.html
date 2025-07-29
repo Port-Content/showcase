@@ -75,16 +75,16 @@
       border-left: 6px solid;
     }
     
+    .others .accordion-header {
+      border-left-color: #2196f3;
+    }
+    
     .ichale .accordion-header {
       border-left-color: #e91e63;
     }
     
     .varattche .accordion-header {
       border-left-color: #673ab7;
-    }
-    
-    .others .accordion-header {
-      border-left-color: #2196f3;
     }
     
     .accordion-header:hover {
@@ -134,6 +134,10 @@
       border-left: 4px solid;
     }
     
+    .others .lp-link {
+      border-left-color: #2196f3;
+    }
+    
     .ichale .lp-link {
       border-left-color: #e91e63;
     }
@@ -142,13 +146,13 @@
       border-left-color: #673ab7;
     }
     
-    .others .lp-link {
-      border-left-color: #2196f3;
-    }
-    
     .lp-link:hover {
       transform: translateX(8px);
       box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    
+    .others .lp-link:hover {
+      background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
     }
     
     .ichale .lp-link:hover {
@@ -157,10 +161,6 @@
     
     .varattche .lp-link:hover {
       background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
-    }
-    
-    .others .lp-link:hover {
-      background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
     }
     
     .link-content {
@@ -212,16 +212,16 @@
       color: white;
     }
     
+    .others .category-badge {
+      background: #2196f3;
+    }
+    
     .ichale .category-badge {
       background: #e91e63;
     }
     
     .varattche .category-badge {
       background: #673ab7;
-    }
-    
-    .others .category-badge {
-      background: #2196f3;
     }
     
     @media (max-width: 768px) {
@@ -267,192 +267,185 @@
       <p>エンタメ系LPの一覧です。気になるカテゴリを展開してください。</p>
     </div>
     
-    <div class="accordion others">
-      <button class="accordion-header">
-        <div class="accordion-title">
-          🎯 サービス・商品・その他
-          <span class="category-badge">6項目</span>
-        </div>
-        <span class="accordion-icon">▼</span>
-      </button>
-      <div class="accordion-content">
-        <div class="accordion-inner">
-          <a class="lp-link" href="fc_support_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">📦</div>
-              <div class="link-text">
-                <div class="link-title">ファンクラブ運営支援LP</div>
-                <div class="link-subtitle">FC SupPort</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="book_promotion_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">📚</div>
-              <div class="link-text">
-                <div class="link-title">出版物支援LP</div>
-                <div class="link-subtitle">CastPort</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="nfc_acsta_lp">
-            <div class="link-content">
-              <div class="link-emoji">👍</div>
-              <div class="link-text">
-                <div class="link-title">NFC付き次世代アクスタ</div>
-                <div class="link-subtitle">Shoport</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="nfc_live_key">
-            <div class="link-content">
-              <div class="link-emoji">🎫</div>
-              <div class="link-text">
-                <div class="link-title">次世代ライブチケットアクキー</div>
-                <div class="link-subtitle">Shoport</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="nfc_emotional_acsta_lp">
-            <div class="link-content">
-              <div class="link-emoji">🩰</div>
-              <div class="link-text">
-                <div class="link-title">衣装別かざすと楽曲が流れるアクスタ</div>
-                <div class="link-subtitle">Shoport</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="victory_live_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">🐾</div>
-              <div class="link-text">
-                <div class="link-title">ビクター主催イベント</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-        </div>
-      </div>
+    <div id="accordion-container">
+      <!-- JavaScriptで動的生成 -->
     </div>
-    
-    <div class="accordion ichale">
-      <button class="accordion-header">
-        <div class="accordion-title">
-          💃 アイチャレ
-          <span class="category-badge">4項目</span>
-        </div>
-        <span class="accordion-icon">▼</span>
-      </button>
-      <div class="accordion-content">
-        <div class="accordion-inner">
-          <a class="lp-link" href="ichale_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">💃</div>
-              <div class="link-text">
-                <div class="link-title">アイチャレ出演募集LP</div>
-                <div class="link-subtitle">番組</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="ichale_fes_line_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">🤩</div>
-              <div class="link-text">
-                <div class="link-title">アイチャレ LIVE LINE風</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="ichale_rush_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">🏃‍♀️</div>
-              <div class="link-text">
-                <div class="link-title">アイチャレ LIVE RUSH</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="ichale_fes_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">🪩</div>
-              <div class="link-text">
-                <div class="link-title">アイチャレ LIVE FES+</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="accordion varattche">
-      <button class="accordion-header">
-        <div class="accordion-title">
-          😈 バラッチェ
-          <span class="category-badge">3項目</span>
-        </div>
-        <span class="accordion-icon">▼</span>
-      </button>
-      <div class="accordion-content">
-        <div class="accordion-inner">
-          <a class="lp-link" href="varattche_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">😈</div>
-              <div class="link-text">
-                <div class="link-title">バラッチェ出演募集LP</div>
-                <div class="link-subtitle">番組</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="vara_fes_line_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">💬</div>
-              <div class="link-text">
-                <div class="link-title">バラッチェ FESTIVAL LINE風</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-          
-          <a class="lp-link" href="vara_fes_lp.html">
-            <div class="link-content">
-              <div class="link-emoji">👾</div>
-              <div class="link-text">
-                <div class="link-title">バラッチェ FESTIVAL</div>
-                <div class="link-subtitle">イベント</div>
-              </div>
-              <div class="link-arrow">→</div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-    
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // ==============================================
+    // 📝 ここを編集するだけで簡単に更新できます！
+    // ==============================================
+    
+    const portalData = {
+      others: {
+        title: "🎯 サービス・商品・その他",
+        className: "others",
+        items: [
+           {
+            emoji: "🧮",
+            title: "Talkport枠計算機",
+            subtitle: "ツール",
+            url: "talkport_tool"
+          }
+        ]
+      },  
+          {
+            emoji: "📦",
+            title: "ファンクラブ運営支援LP",
+            subtitle: "FC SupPort",
+            url: "fc_support_lp.html"
+          },
+          {
+            emoji: "📚",
+            title: "出版物支援LP",
+            subtitle: "CastPort",
+            url: "book_promotion_lp.html"
+          },
+          {
+            emoji: "👍",
+            title: "NFC付き次世代アクスタ",
+            subtitle: "Shoport",
+            url: "nfc_acsta_lp"
+          },
+          {
+            emoji: "🎫",
+            title: "次世代ライブチケットアクキー",
+            subtitle: "Shoport",
+            url: "nfc_live_key"
+          },
+          {
+            emoji: "🩰",
+            title: "衣装別かざすと楽曲が流れるアクスタ",
+            subtitle: "Shoport",
+            url: "nfc_acsta_lp"
+          },
+          {
+            emoji: "🐾",
+            title: "ビクター主催イベント",
+            subtitle: "イベント",
+            url: "victory_live_lp.html"
+          }
+        ]
+      },
+     
+      
+      ichale: {
+        title: "💃 アイチャレ",
+        className: "ichale",
+        items: [
+          {
+            emoji: "💃",
+            title: "アイチャレ出演募集LP",
+            subtitle: "番組",
+            url: "ichale_lp.html"
+          },
+          {
+            emoji: "🤩",
+            title: "アイチャレ LIVE LINE風",
+            subtitle: "イベント",
+            url: "ichale_fes_line_lp.html"
+          },
+          {
+            emoji: "🏃‍♀️",
+            title: "アイチャレ LIVE RUSH",
+            subtitle: "イベント",
+            url: "ichale_rush_lp.html"
+          },
+          {
+            emoji: "🪩",
+            title: "アイチャレ LIVE FES+",
+            subtitle: "イベント",
+            url: "ichale_fes_lp.html"
+          }
+        ]
+      },
+      
+      varattche: {
+        title: "😈 バラッチェ",
+        className: "varattche",
+        items: [
+          {
+            emoji: "😈",
+            title: "バラッチェ出演募集LP",
+            subtitle: "番組",
+            url: "varattche_lp.html"
+          },
+          {
+            emoji: "💬",
+            title: "バラッチェ FESTIVAL LINE風",
+            subtitle: "イベント",
+            url: "vara_fes_line_lp.html"
+          },
+          {
+            emoji: "👾",
+            title: "バラッチェ FESTIVAL",
+            subtitle: "イベント",
+            url: "vara_fes_lp.html"
+          }
+        ]
+      }
+    };
+    
+    // ==============================================
+    // 自動生成部分（編集不要）
+    // ==============================================
+    
+    function generateAccordionHTML() {
+      const container = document.getElementById('accordion-container');
+      
+      Object.keys(portalData).forEach(categoryKey => {
+        const category = portalData[categoryKey];
+        
+        // アコーディオン要素を作成
+        const accordionDiv = document.createElement('div');
+        accordionDiv.className = `accordion ${category.className}`;
+        
+        // ヘッダー部分
+        const headerButton = document.createElement('button');
+        headerButton.className = 'accordion-header';
+        headerButton.innerHTML = `
+          <div class="accordion-title">
+            ${category.title}
+            <span class="category-badge">${category.items.length}項目</span>
+          </div>
+          <span class="accordion-icon">▼</span>
+        `;
+        
+        // コンテンツ部分
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'accordion-content';
+        
+        const innerDiv = document.createElement('div');
+        innerDiv.className = 'accordion-inner';
+        
+        // 各リンクを生成
+        category.items.forEach(item => {
+          const linkElement = document.createElement('a');
+          linkElement.className = 'lp-link';
+          linkElement.href = item.url;
+          linkElement.innerHTML = `
+            <div class="link-content">
+              <div class="link-emoji">${item.emoji}</div>
+              <div class="link-text">
+                <div class="link-title">${item.title}</div>
+                <div class="link-subtitle">${item.subtitle}</div>
+              </div>
+              <div class="link-arrow">→</div>
+            </div>
+          `;
+          innerDiv.appendChild(linkElement);
+        });
+        
+        contentDiv.appendChild(innerDiv);
+        accordionDiv.appendChild(headerButton);
+        accordionDiv.appendChild(contentDiv);
+        container.appendChild(accordionDiv);
+      });
+    }
+    
+    // アコーディオンの開閉機能
+    function initializeAccordions() {
       const accordionHeaders = document.querySelectorAll('.accordion-header');
       
       accordionHeaders.forEach(header => {
@@ -460,7 +453,6 @@
           const accordion = this.parentElement;
           const isActive = accordion.classList.contains('active');
           
-          // クリックしたアコーディオンを開閉
           if (isActive) {
             accordion.classList.remove('active');
           } else {
@@ -468,6 +460,12 @@
           }
         });
       });
+    }
+    
+    // ページ読み込み時に実行
+    document.addEventListener('DOMContentLoaded', function() {
+      generateAccordionHTML();
+      initializeAccordions();
     });
   </script>
 </body>
