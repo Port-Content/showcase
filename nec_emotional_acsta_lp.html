@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>楽曲連動アクスタ - あの日の"推し"が、今、音とともに甦る</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+            background: linear-gradient(180deg, #f8fdff 0%, #e3f2fd 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 泡のパーティクル */
+        .bubble {
+            position: absolute;
+            background: radial-gradient(circle, rgba(129, 212, 250, 0.3), rgba(129, 212, 250, 0.1));
+            border-radius: 50%;
+            animation: bubbleFloat 8s ease-in-out infinite;
+            z-index: 1;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(129, 212, 250, 0.2);
+        }
+
+        .bubble:nth-child(2n) {
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.3), rgba(255, 182, 193, 0.1));
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            animation-delay: -2s;
+        }
+
+        .bubble:nth-child(3n) {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation-delay: -4s;
+        }
+
+        /* ベース透明効果 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(129, 212, 250, 0.1);
+            border-radius: 24px;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1565c0, #42a5f5, #81d4fa);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            font-weight: 700;
+        }
+
+        .normal-text {
+            color: #2c5aa0;
+            font-weight: 500;
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 1.5rem;
+            animation: fadeInUp 1.5s ease-out 0.3s both;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #546e7a;
+            margin-top: 1.5rem;
+            animation: fadeInUp 1.5s ease-out 0.6s both;
+            line-height: 1.6;
+        }
+
+        /* メインコンテンツ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section {
+            margin: 3rem 0;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: #1565c0;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #42a5f5, #81d4fa);
+            border-radius: 2px;
+        }
+
+        /* フィーチャーカード */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            padding: 2.5rem 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(129, 212, 250, 0.2), transparent);
+            border-radius: 50%;
+            animation: bubbleGlow 3s ease-in-out infinite;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(129, 212, 250, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            color: #1565c0;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: #546e7a;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* スペックテーブル */
+        .specs-table {
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .specs-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(129, 212, 250, 0.1);
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(129, 212, 250, 0.1);
+        }
+
+        .specs-table th {
+            background: linear-gradient(135deg, #e3f2fd, #f0f9ff);
+            color: #1565c0;
+            font-weight: 600;
+        }
+
+        .specs-table td {
+            color: #37474f;
+        }
+
+        /* プライシングカード */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .pricing-card {
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(129, 212, 250, 0.2);
+            border-color: rgba(129, 212, 250, 0.3);
+        }
+
+        .pricing-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-label {
+            color: #42a5f5;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .pricing-description {
+            color: #546e7a;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* プロセスステップ */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .process-step {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #42a5f5, #1565c0);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(66, 165, 245, 0.3);
+        }
+
+        .step-title {
+            color: #1565c0;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .step-description {
+            color: #546e7a;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ */
+        .faq-container {
+            margin: 3rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(129, 212, 250, 0.2);
+        }
+
+        .faq-question {
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1565c0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(227, 242, 253, 0.8);
+        }
+
+        .faq-question.active::after {
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: #546e7a;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+            padding: 1.5rem 2rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #42a5f5, #1565c0);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(66, 165, 245, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(66, 165, 245, 0.4);
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes bubbleFloat {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) scale(1); 
+                opacity: 0.7; 
+            }
+            25% { 
+                transform: translateY(-20px) translateX(10px) scale(1.1); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: translateY(-40px) translateX(-5px) scale(0.9); 
+                opacity: 0.9; 
+            }
+            75% { 
+                transform: translateY(-20px) translateX(-10px) scale(1.05); 
+                opacity: 0.8; 
+            }
+        }
+
+        @keyframes bubbleGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 50vh;
+                padding: 2rem 1rem 1rem;
+            }
+            .hero-content h1 { font-size: 2rem; }
+            .normal-text { font-size: 1.2rem; }
+            .subtitle { font-size: 1rem; margin-top: 1rem; }
+            .features, .pricing-grid, .process-steps { grid-template-columns: 1fr; }
+            .bubble { display: none; }
+            .container { padding: 0 1rem; }
+            .section { margin: 2rem 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 泡のパーティクル -->
+    <div class="bubble" style="top: 10%; left: 10%; width: 80px; height: 80px; animation-delay: 0s;"></div>
+    <div class="bubble" style="top: 20%; left: 80%; width: 60px; height: 60px; animation-delay: -2s;"></div>
+    <div class="bubble" style="top: 40%; left: 15%; width: 100px; height: 100px; animation-delay: -4s;"></div>
+    <div class="bubble" style="top: 60%; left: 85%; width: 70px; height: 70px; animation-delay: -6s;"></div>
+    <div class="bubble" style="top: 80%; left: 20%; width: 90px; height: 90px; animation-delay: -8s;"></div>
+    <div class="bubble" style="top: 30%; left: 70%; width: 50px; height: 50px; animation-delay: -1s;"></div>
+    <div class="bubble" style="top: 70%; left: 40%; width: 85px; height: 85px; animation-delay: -3s;"></div>
+    <div class="bubble" style="top: 50%; left: 60%; width: 65px; height: 65px; animation-delay: -5s;"></div>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="gradient-text">あの日の"推し"が、今、音とともに甦る。</span>
+                <span class="normal-text">― 楽曲連動アクスタ ―</span>
+            </h1>
+            <p class="subtitle">👗 あの衣装、あの楽曲、あの瞬間をふたたび。<br>
+            メンバーが過去の楽曲衣装を着たアクリルスタンドに、スマホをかざすと当時の楽曲が再生される"エモ仕様"です。</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- フィーチャーセクション -->
+        <section class="section">
+            <h2 class="section-title">🎵 3つの特別な体験</h2>
+            <div class="features">
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🎭</div>
+                    <div class="feature-title">過去楽曲衣装アクスタ</div>
+                    <p class="feature-description">メンバーが過去の楽曲衣装を着たアクリルスタンド。あの時の衣装が、手のひらサイズで蘇ります。「この衣装が一番好きだった」そんな思い出を形にできます。</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">スマホかざして楽曲再生</div>
+                    <p class="feature-description">NFC機能でスマホをかざすと、当時の楽曲が再生。衣装がキーコードとなる特別な仕様で、視覚と聴覚の両方で思い出を呼び起こします。</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">💭</div>
+                    <div class="feature-title">記憶ごと手元に</div>
+                    <p class="feature-description">「この曲で初めてライブで泣いた」「この衣装の時のパフォーマンスが忘れられない」そんな大切な記憶ごと、手元に残せる特別なアイテムです。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 商品仕様 -->
+        <section class="section">
+            <h2 class="section-title">📦 商品仕様</h2>
+            <div class="specs-table glass-effect">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>商品名</td>
+                            <td>楽曲連動アクスタ（過去衣装ver.）</td>
+                        </tr>
+                        <tr>
+                            <td>サイズ</td>
+                            <td>約10cm × 10cm</td>
+                        </tr>
+                        <tr>
+                            <td>内容物</td>
+                            <td>NFC内蔵アクリルスタンド＋銀袋封入（ランダム販売対応）</td>
+                        </tr>
+                        <tr>
+                            <td>NFC再生内容</td>
+                            <td>楽曲（または試聴版）、メンバーからの限定ボイスなど</td>
+                        </tr>
+                        <tr>
+                            <td>衣装連動機能</td>
+                            <td>衣装部分にNFCチップを内蔵 → 楽曲再生トリガーに設定</td>
+                        </tr>
+                        <tr>
+                            <td>納期</td>
+                            <td>デザイン＆音源入稿から約20営業日</td>
+                        </tr>
+                        <tr>
+                            <td>最小ロット</td>
+                            <td>1,000個（10種 × 各100）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 再生仕様 -->
+        <section class="section">
+            <h2 class="section-title">🎧 再生仕様と"エモ設計"</h2>
+            <div class="features">
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🎵</div>
+                    <div class="feature-title">衣装連動再生</div>
+                    <p class="feature-description">衣装にスマホをかざすと、当時の曲が再生される仕様。まさにその衣装と楽曲がリンクして、記憶が鮮やかに蘇ります。</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🔁</div>
+                    <div class="feature-title">カスタム再生範囲</div>
+                    <p class="feature-description">サビのみ、イントロのみ、ライブの特別な一部分など、思い出の核心部分だけを切り取って再生可能。好きな部分を何度でも。</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🗣️</div>
+                    <div class="feature-title">限定ボイスコメント</div>
+                    <p class="feature-description">楽曲前にメンバーの特別なボイスコメントも挿入可能。「この衣装、なつかしいでしょ？」など、ファンの心に響くメッセージ付き。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 活用シーン -->
+        <section class="section">
+            <h2 class="section-title">🎯 活用シーン</h2>
+            <div class="features">
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🎂</div>
+                    <div class="feature-title">周年記念企画</div>
+                    <p class="feature-description">グループの周年記念やライブツアーの過去衣装アーカイブ企画として、ファンの思い出を形にできる特別な商品</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">💿</div>
+                    <div class="feature-title">ベストアルバム連動</div>
+                    <p class="feature-description">ベストアルバム発売連動の立体特典として、楽曲と視覚的思い出を組み合わせた高付加価値商品</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">🎁</div>
+                    <div class="feature-title">クラファン限定特典</div>
+                    <p class="feature-description">クラウドファンディング限定の"エモ特典"として、支援者だけの特別な思い出体験を提供</p>
+                </div>
+                <div class="feature-card glass-effect">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">シリーズ展開</div>
+                    <p class="feature-description">全種揃えると1st〜最新曲まで追体験できるコレクション。グループの歴史を立体的に楽しめます</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 価格設定 -->
+        <section class="section">
+            <h2 class="section-title">💰 販売モデル（例）</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card glass-effect">
+                    <div class="pricing-number">2,000円</div>
+                    <div class="pricing-label">通常ガチャ販売</div>
+                    <p class="pricing-description">ランダム1種＋楽曲再生<br>お手軽に思い出を持ち帰れる価格設定で、多くのファンがアクセス可能</p>
+                </div>
+                <div class="pricing-card glass-effect">
+                    <div class="pricing-number">20,000円</div>
+                    <div class="pricing-label">コンプリートBOX</div>
+                    <p class="pricing-description">10種セット＋シークレットボイス入り特典付き<br>全ての思い出を完全コレクションできる特別版</p>
+                </div>
+                <div class="pricing-card glass-effect">
+                    <div class="pricing-number">5,000円〜</div>
+                    <div class="pricing-label">クラファン限定</div>
+                    <p class="pricing-description">限定衣装＋本人コメント音声＋直筆サイン仕様など<br>支援者限定の超プレミアム体験</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 導入フロー -->
+        <section class="section">
+            <h2 class="section-title">🚀 導入までの流れ</h2>
+            <div class="process-steps">
+                <div class="process-step glass-effect">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">素材準備</h4>
+                    <p class="step-description">衣装写真／アクスタ用イラスト／楽曲データをご用意ください（10種まで対応可能）</p>
+                </div>
+                <div class="process-step glass-effect">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">仕様ヒアリング</h4>
+                    <p class="step-description">封入・再生仕様をヒアリング（ランダム・BOX・クラファンなど、最適な販売形態をご提案）</p>
+                </div>
+                <div class="process-step glass-effect">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">制作・納品</h4>
+                    <p class="step-description">入稿後、約20営業日で高品質な楽曲連動アクスタが完成・納品</p>
+                </div>
+                <div class="process-step glass-effect">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">販売開始</h4>
+                    <p class="step-description">Shoport・Talkport連携で販売開始。通販・限定配信・イベント販売すべて対応</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section">
+            <h2 class="section-title">❓ よくある質問</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(0)">Q. 著作権的に楽曲を使うのは大丈夫？</div>
+                    <div class="faq-answer" id="faq-0">原盤権／著作権が自社管理 or 許諾済であれば再生可能です。権利関係についても詳しくご相談いただけます。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(1)">Q. 再生範囲を調整できますか？</div>
+                    <div class="faq-answer" id="faq-1">はい。サビのみ、イントロのみ、本人コメント付きなど自由に編集可能です。思い出の特別な部分だけを切り取って再生できます。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(2)">Q. 再販やシリーズ展開は？</div>
+                    <div class="faq-answer" id="faq-2">はい。第1弾「衣装アクスタvol.1」などコレクション形式でシリーズ展開も可能です。ファンの思い出を段階的に商品化できます。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(3)">Q. NFC機能に対応していないスマホでも使えますか？</div>
+                    <div class="faq-answer" id="faq-3">QRコード併用も可能です。アクスタにQRコードを印刷することで、幅広いデバイスでお楽しみいただけます。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="glass-effect" style="padding: 3rem; text-align: center;">
+                <h2 style="color: #1565c0; margin-bottom: 1rem; font-size: 1.8rem;">🛒 Shoportでスムーズに販売可能！</h2>
+                <p style="color: #546e7a; margin-bottom: 2rem; line-height: 1.7; font-size: 1rem;">
+                    オンライン販売／在庫管理／決済／発送すべて自動化<br>
+                    販売価格の80％を自動入金（手数料20％）<br>
+                    月末締め→翌月末払いで収益も安定
+                </p>
+                <a href="mailto:contents@theport.inc" class="cta-button">
+                    📩 お問い合わせはこちら
+                </a>
+                <p style="color: #546e7a; margin-top: 1.5rem; font-size: 0.9rem;">
+                    contents@theport.inc<br>
+                    「エモくて残るグッズをつくりたい」その想いに、NFCで応えます。
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // FAQ トグル機能
+        function toggleFAQ(index) {
+            const question = document.querySelector(`.faq-item:nth-child(${index + 1}) .faq-question`);
+            const answer = document.getElementById(`faq-${index}`);
+            const isActive = answer.classList.contains('active');
+            
+            // 全てのFAQを閉じる
+            document.querySelectorAll('.faq-answer').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.faq-question').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // クリックされたFAQが閉じていたら開く
+            if (!isActive) {
+                answer.classList.add('active');
+                question.classList.add('active');
+            }
+        }
+
+        // スクロールアニメーション
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.section');
+            const windowHeight = window.innerHeight;
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            // スクロール監視
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // 初回実行
+        });
+
+        // 追加の泡を動的生成
+        function createBubbles() {
+            const container = document.body;
+            const bubbleCount = 3;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    const size = 40 + Math.random() * 60;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+                    bubble.style.top = Math.random() * 100 + '%';
+                    bubble.style.left = Math.random() * 100 + '%';
+                    bubble.style.animationDelay = Math.random() * 8 + 's';
+                    container.appendChild(bubble);
+                    
+                    // 15秒後に削除
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, 15000);
+                }, i * 3000);
+            }
+        }
+
+        // 定期的に泡を生成
+        setInterval(createBubbles, 20000);
+    </script>
+</body>
+</html>
