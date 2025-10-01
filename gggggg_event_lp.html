@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGGGGG #ジーロック — ダンスボーカル対バン & 公開インタビュー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: #0a0015;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.2) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .fixed-cta {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .fixed-cta-button {
+            display: block;
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #ff00ff, #c71585);
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.6);
+            transition: all 0.3s ease;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .fixed-cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(255, 0, 255, 0.8);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 10px 40px rgba(255, 0, 255, 0.6); }
+            50% { box-shadow: 0 10px 50px rgba(255, 0, 255, 0.9); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ff00ff, #ff66ff, #ffccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #ffccff;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 4px;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 2;
+        }
+
+        .section {
+            background: rgba(20, 0, 40, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 60px 50px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #fff;
+            border-left: 6px solid #ff00ff;
+            padding-left: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .info-card {
+            background: rgba(138, 43, 226, 0.15);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            background: rgba(138, 43, 226, 0.25);
+            border-color: rgba(255, 0, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #ffccff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .timetable {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .timetable-row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .timetable-row:last-child {
+            border-bottom: none;
+        }
+
+        .timetable-row:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        .timetable-time {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ff00ff;
+        }
+
+        .timetable-content {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .timetable-interview {
+            color: #ffccff;
+            font-weight: 600;
+        }
+
+        .timetable-special {
+            color: #ff66ff;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        th {
+            background: rgba(138, 43, 226, 0.3);
+            font-weight: 700;
+            color: #ffccff;
+        }
+
+        tr:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(199, 21, 133, 0.2));
+            padding: 40px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 0, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(255, 0, 255, 0.3);
+        }
+
+        .benefit-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .benefit-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffccff;
+        }
+
+        .benefit-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #fff;
+        }
+
+        .faq-item {
+            background: rgba(138, 43, 226, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff00ff;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffccff;
+        }
+
+        .faq-answer {
+            font-size: 1.05rem;
+            color: #fff;
+            line-height: 1.8;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(199, 21, 133, 0.4));
+            border-radius: 30px;
+            margin: 40px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 25px 60px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #ff00ff, #c71585);
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.7);
+        }
+
+        .hashtags {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 50px 0;
+            color: #ffccff;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: #ffccff;
+        }
+
+        .highlight {
+            color: #ff66ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+                letter-spacing: 5px;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .section {
+                padding: 40px 25px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .timetable-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fixed-cta {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fixed-cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed-cta">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfpszIGFKmV3ZUwutNSSX4g4GPSB8-p785StOHftjFaN5pKag/viewform?usp=header" target="_blank" class="fixed-cta-button">
+            📝 出演エントリー
+        </a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>GGGGGG</h1>
+            <p class="subtitle">#ジーロック</p>
+            <p class="tagline">ダンスボーカル対バン & 公開インタビュー<br>"対バン × 取材"で、グループの新しい一面が見える夜。</p>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">📅 開催概要</h2>
+            <div class="info-card" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(199, 21, 133, 0.3)); border: 2px solid rgba(255, 0, 255, 0.5); margin-bottom: 30px; text-align: center; padding: 40px;">
+                <div class="info-label" style="font-size: 1rem;">主催</div>
+                <div class="info-value" style="font-size: 2rem; margin-bottom: 15px;">POETRY ON</div>
+                <a href="https://entame01.com/" target="_blank" style="color: #ff66ff; text-decoration: none; font-size: 1.1rem; font-weight: 600;">🔗 公式サイトを見る →</a>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">日時</div>
+                    <div class="info-value">11月4日（火）<br>17:00–23:00</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">会場</div>
+                    <div class="info-value">五反田 G6</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">住所</div>
+                    <div class="info-value">東京都品川区西五反田2-6-3<br>東洋ビル B1</div>
+                </div>
+            </div>
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="https://www.google.com/maps?q=東京都品川区西五反田2-6-3" target="_blank" style="color: #ff66ff; text-decoration: none; font-size: 1.1rem;">📍 Googleマップで見る →</a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">🧪 コンセプト</h2>
+            <p style="font-size: 1.2rem; line-height: 2;">
+                ダンスボーカルに特化した<span class="highlight">対バン</span>と、<span class="highlight">3組ごとの公開インタビュー</span>でグループの魅力・共通点・相互リスペクトを"その場"で可視化。<span class="highlight">翌日、WEBメディアにインタビュー掲載</span>して二次拡散まで届けます。
+            </p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">⏰ タイムテーブル</h2>
+            <div class="timetable">
+                <div class="timetable-row">
+                    <div class="timetable-time">17:00〜17:20</div>
+                    <div class="timetable-content timetable-special">開演</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">17:20〜17:40</div>
+                    <div class="timetable-content">グループ1</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">17:40〜18:00</div>
+                    <div class="timetable-content">グループ2</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">18:00〜18:20</div>
+                    <div class="timetable-content">グループ3</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">18:20〜18:45</div>
+                    <div class="timetable-content timetable-interview">公開インタビュー（グループ1・2・3）</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">18:45〜18:50</div>
+                    <div class="timetable-content timetable-special">調整</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">18:50〜19:10</div>
+                    <div class="timetable-content">グループ4</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">19:10〜19:30</div>
+                    <div class="timetable-content">グループ5</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">19:30〜19:50</div>
+                    <div class="timetable-content">グループ6</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">19:50〜20:05</div>
+                    <div class="timetable-content timetable-interview">公開インタビュー（グループ4・5・6）</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">20:05〜20:10</div>
+                    <div class="timetable-content timetable-special">調整</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">20:10〜20:30</div>
+                    <div class="timetable-content">グループ7</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">20:30〜20:50</div>
+                    <div class="timetable-content">グループ8</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">20:50〜21:10</div>
+                    <div class="timetable-content">グループ9</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">21:10〜21:25</div>
+                    <div class="timetable-content timetable-interview">公開インタビュー（グループ7・8・9）</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">21:30〜22:30</div>
+                    <div class="timetable-content timetable-special">会場特典会</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">22:30</div>
+                    <div class="timetable-content timetable-special">全グループ特典会終了</div>
+                </div>
+                <div class="timetable-row">
+                    <div class="timetable-time">23:00</div>
+                    <div class="timetable-content timetable-special">完全撤収</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">🎟 チケット</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>種別</th>
+                        <th>前売</th>
+                        <th>当日</th>
+                        <th>備考</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>VIP</strong></td>
+                        <td><strong>¥3,000</strong> + 1D</td>
+                        <td><strong>¥3,700</strong> + 1D</td>
+                        <td>優先入場・前方エリア（予定）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>通常</strong></td>
+                        <td><strong>¥2,000</strong> + 1D</td>
+                        <td><strong>¥2,700</strong> + 1D</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="text-align: center; color: #ffccff; font-weight: 600; margin-top: 20px;">再入場 Free（1D条件は会場規定に準拠）</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">💡 出演メリット</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📰</div>
+                    <div class="benefit-title">WEB掲載で資産化</div>
+                    <div class="benefit-description">POETRY ONでインタビュー記事化。アーカイブ資産として残り、エビデンスにも活用できます</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💬</div>
+                    <div class="benefit-title">人柄を可視化</div>
+                    <div class="benefit-description">公開インタビューで人柄・ストーリーを伝え、ファンの理解を深めます</div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">👥</div>
+                    <div class="benefit-title">新規ファン獲得</div>
+                    <div class="benefit-description">再入場Free設計で他グループのファンとの接点を創出。物販手数料も0円</div>
+                </div>
+            </div>
+            <p style="margin-top: 40px; text-align: center; color: #ffccff; font-size: 1.05rem;">※ 出演料なし / チケットバックなし / 物販手数料なし — 条件は透明にご案内します</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">📝 出演条件</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-label">ジャンル</div>
+                    <div class="info-value">ダンスボーカル中心<br>（ユニット/グループ歓迎）</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">持ち時間</div>
+                    <div class="info-value">ライブ20分 +<br>公開インタビュー + 特典会</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">掲載許諾</div>
+                    <div class="info-value">写真・発言の<br>編集掲載にご同意</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">❓ FAQ</h2>
+            <div class="faq-item">
+                <div class="faq-question">Q. ソロは出演できますか？</div>
+                <div class="faq-answer">A. 可能です（編成や見た目のバランスは全体で調整します）。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q. 取材内容のコントロールは可能？</div>
+                <div class="faq-answer">A. 方向性のご希望は事前に共有ください。編集はメディア基準で最小限整えます。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q. 写真の二次利用は？</div>
+                <div class="faq-answer">A. イベント関連記事・告知素材に限り主催許諾の範囲で利用します（詳細は当日合意）。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Q. 物販の精算や導線は？</div>
+                <div class="faq-answer">A. 会場規定に沿って運用します。手数料は0円です。</div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: #fff;">📣 出演エントリー / お問い合わせ</h2>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfpszIGFKmV3ZUwutNSSX4g4GPSB8-p785StOHftjFaN5pKag/viewform?usp=header" target="_blank" class="cta-button">出演エントリーはこちら</a>
+            <a href="mailto:contents@theport.inc" class="cta-button">メールで問い合わせ</a>
+            <p style="margin-top: 30px; font-size: 1.1rem; color: #ffccff;">まずはお気軽にご連絡ください。編成・時間割はご相談ベースで調整します。</p>
+        </section>
+
+        <div class="hashtags">
+            🏷 #ジーロック #GGGGGG
+        </div>
+
+        <section class="section" style="background: rgba(138, 43, 226, 0.05);">
+            <h3 style="font-size: 1.3rem; margin-bottom: 20px; color: #ffccff;">免責・ご案内</h3>
+            <ul style="list-style: none; line-height: 2; color: #fff;">
+                <li>• 進行・出演順は当日の運営判断で変更の可能性があります</li>
+                <li>• 会場ルール（再入場・ドリンク・撮影可否・整列導線 等）にご協力ください</li>
+                <li>• 取材/掲載に関する詳細は当日配布のガイドラインをご確認ください</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>主催：POETRY ON</strong> / <strong>会場：五反田G6</strong></p>
+            <p style="font-size: 1.3rem; line-height: 2;">ライブで"魅せて"、インタビューで"伝わる"。<br><span class="highlight">GGGGGG #ジーロック</span>で、新しいファンとの交差点を。</p>
+        </footer>
+    </div>
+</body>
+</html>
