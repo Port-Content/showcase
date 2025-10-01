@@ -276,99 +276,31 @@
     // ==============================================
     // 📝 ここを編集するだけで簡単に更新できます！
     // ==============================================
-    
     const portalData = {
       others: {
         title: "🎯 サービス・商品・その他",
         className: "others",
         items: [
-          {
-            emoji: "🧮",
-            title: "Talkport枠計算機",
-            subtitle: "ツール",
-            url: "talkport_tool"
-          },
-          {
-            emoji: "🗓️",
-            title: "Calendarコピーツール",
-            subtitle: "ツール",
-            url: "Calendar.html"
-          },
-          {
-            emoji: "📦",
-            title: "ファンクラブ運営支援LP",
-            subtitle: "FC SupPort",
-            url: "fc_support_lp.html"
-          },
-          {
-            emoji: "📚",
-            title: "出版物支援LP",
-            subtitle: "CastPort",
-            url: "book_promotion_lp.html"
-          },
-          {
-            emoji: "👍",
-            title: "NFC付き次世代アクスタ",
-            subtitle: "Shoport",
-            url: "nfc_acsta_lp"
-          },
-          {
-            emoji: "🎫",
-            title: "次世代ライブチケットアクキー",
-            subtitle: "Shoport",
-            url: "nfc_live_key"
-          },
-          {
-            emoji: "🩰",
-            title: "衣装別かざすと楽曲が流れるアクスタ",
-            subtitle: "Shoport",
-            url: "nfc_acsta_lp"
-          },
-          {
-            emoji: "🐾",
-            title: "ビクター主催イベント",
-            subtitle: "イベント",
-            url: "victory_live_lp.html"
-          }
+          { emoji: "🧮", title: "Talkport枠計算機",             subtitle: "ツール",   url: "talkport_tool.html" },
+          { emoji: "🗓️", title: "Calendarコピーツール",         subtitle: "ツール",   url: "Calendar.html" },
+          { emoji: "📦", title: "ファンクラブ運営支援LP",         subtitle: "FC SupPort", url: "fc_support_lp.html" },
+          { emoji: "📚", title: "出版物支援LP",                   subtitle: "CastPort", url: "book_promotion_lp.html" },
+          { emoji: "👍", title: "NFC付き次世代アクスタ",          subtitle: "Shoport",  url: "nfc_acsta_lp.html" },
+          { emoji: "🎫", title: "次世代ライブチケットアクキー",    subtitle: "Shoport",  url: "nfc_live_key.html" },
+          { emoji: "🩰", title: "衣装別かざすと楽曲が流れるアクスタ", subtitle: "Shoport",  url: "nfc_acsta_lp.html" },
+          { emoji: "🐾", title: "ビクター主催イベント",            subtitle: "イベント", url: "victory_live_lp.html" },
+          { emoji: "😀", title: "GGGGGG#ジーロック",               subtitle: "イベント", url: "gggggg_event_lp.html" }
         ]
       },
-       {
-            emoji: "😀",
-            title: "GGGGGG#ジーロック",
-            subtitle: "イベント",
-            url: "gggggg_event_lp.html"
-          }
-        ]
-      }
       
       ichale: {
         title: "💃 アイチャレ",
         className: "ichale",
         items: [
-          {
-            emoji: "💃",
-            title: "アイチャレ出演募集LP",
-            subtitle: "番組",
-            url: "ichale_lp.html"
-          },
-          {
-            emoji: "🤩",
-            title: "アイチャレ LIVE LINE風",
-            subtitle: "イベント",
-            url: "ichale_fes_line_lp.html"
-          },
-          {
-            emoji: "🏃‍♀️",
-            title: "アイチャレ LIVE RUSH",
-            subtitle: "イベント",
-            url: "ichale_rush_lp.html"
-          },
-          {
-            emoji: "🪩",
-            title: "アイチャレ LIVE FES+",
-            subtitle: "イベント",
-            url: "ichale_fes_lp.html"
-          }
+          { emoji: "💃", title: "アイチャレ出演募集LP",           subtitle: "番組",   url: "ichale_lp.html" },
+          { emoji: "🤩", title: "アイチャレ LIVE LINE風",         subtitle: "イベント", url: "ichale_fes_line_lp.html" },
+          { emoji: "🏃‍♀️", title: "アイチャレ LIVE RUSH",        subtitle: "イベント", url: "ichale_rush_lp.html" },
+          { emoji: "🪩", title: "アイチャレ LIVE FES+",           subtitle: "イベント", url: "ichale_fes_lp.html" }
         ]
       },
       
@@ -376,24 +308,9 @@
         title: "😈 バラッチェ",
         className: "varattche",
         items: [
-          {
-            emoji: "😈",
-            title: "バラッチェ出演募集LP",
-            subtitle: "番組",
-            url: "varattche_lp.html"
-          },
-          {
-            emoji: "💬",
-            title: "バラッチェ FESTIVAL LINE風",
-            subtitle: "イベント",
-            url: "vara_fes_line_lp.html"
-          },
-          {
-            emoji: "👾",
-            title: "バラッチェ FESTIVAL",
-            subtitle: "イベント",
-            url: "vara_fes_lp.html"
-          }
+          { emoji: "😈", title: "バラッチェ出演募集LP",           subtitle: "番組",   url: "varattche_lp.html" },
+          { emoji: "💬", title: "バラッチェ FESTIVAL LINE風",    subtitle: "イベント", url: "vara_fes_line_lp.html" },
+          { emoji: "👾", title: "バラッチェ FESTIVAL",            subtitle: "イベント", url: "vara_fes_lp.html" }
         ]
       }
     };
@@ -401,18 +318,17 @@
     // ==============================================
     // 自動生成部分（編集不要）
     // ==============================================
-    
     function generateAccordionHTML() {
       const container = document.getElementById('accordion-container');
       
       Object.keys(portalData).forEach(categoryKey => {
         const category = portalData[categoryKey];
         
-        // アコーディオン要素を作成
+        // アコーディオン要素
         const accordionDiv = document.createElement('div');
         accordionDiv.className = `accordion ${category.className}`;
         
-        // ヘッダー部分
+        // ヘッダー
         const headerButton = document.createElement('button');
         headerButton.className = 'accordion-header';
         headerButton.innerHTML = `
@@ -423,14 +339,13 @@
           <span class="accordion-icon">▼</span>
         `;
         
-        // コンテンツ部分
+        // コンテンツ
         const contentDiv = document.createElement('div');
         contentDiv.className = 'accordion-content';
-        
         const innerDiv = document.createElement('div');
         innerDiv.className = 'accordion-inner';
         
-        // 各リンクを生成
+        // 各リンク
         category.items.forEach(item => {
           const linkElement = document.createElement('a');
           linkElement.className = 'lp-link';
@@ -455,15 +370,13 @@
       });
     }
     
-    // アコーディオンの開閉機能
+    // アコーディオン開閉
     function initializeAccordions() {
       const accordionHeaders = document.querySelectorAll('.accordion-header');
-      
       accordionHeaders.forEach(header => {
         header.addEventListener('click', function() {
           const accordion = this.parentElement;
           const isActive = accordion.classList.contains('active');
-          
           if (isActive) {
             accordion.classList.remove('active');
           } else {
