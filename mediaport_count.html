@@ -119,6 +119,13 @@
             gap: 8px;
         }
         
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: -4px;
+        }
+        
         label {
             font-size: 0.875rem;
             font-weight: 600;
@@ -366,8 +373,15 @@
         .profit-highlight {
             font-size: 2.5rem;
             font-weight: 900;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             line-height: 1;
+        }
+        
+        .breakeven-percent {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 20px;
         }
         
         .profit-positive {
@@ -671,24 +685,15 @@
                 
                 <div class="input-group">
                     <label>印刷枚数</label>
-                    <select id="quantity">
-                        <option value="100">100枚</option>
-                        <option value="200">200枚</option>
-                        <option value="300">300枚</option>
-                        <option value="400">400枚</option>
-                        <option value="500">500枚</option>
-                        <option value="1000">1,000枚</option>
-                        <option value="3000">3,000枚</option>
-                        <option value="5000">5,000枚</option>
-                        <option value="10000">10,000枚</option>
-                    </select>
+                    <input type="number" id="quantity" value="100" min="100" step="100" placeholder="100枚以上">
+                    <div class="input-hint">※ 100枚以上で入力してください</div>
                 </div>
                 
                 <div class="input-group">
                     <label>絵柄種類</label>
                     <select id="design">
                         <option value="1">1種類</option>
-                        <option value="10">2〜10種類</option>
+                        <option value="10" selected>2〜10種類</option>
                     </select>
                 </div>
                 
@@ -819,6 +824,7 @@
                 <div class="profit-card">
                     <h3>損益分岐点</h3>
                     <div class="profit-highlight profit-positive" id="breakEven">0枚</div>
+                    <div class="breakeven-percent" id="breakEvenPercent">製造枚数の0%</div>
                     <div class="profit-details">
                         <div class="profit-detail-row">
                             <span class="profit-detail-label">販売単価</span>
@@ -1014,22 +1020,54 @@
             `;
         }
         
+        function getUnitPrice(material, quantity, design) {
+            // 定義されている枚数のリスト
+            const definedQuantities = [100, 200, 300, 400, 500, 1000, 3000, 5000, 10000];
+            
+            // 素材に応じた印刷方式を決定
+            const method = material === 'paper' ? 'ondemand' : 'offset';
+            
+            // 入力枚数が定義済みの枚数と一致する場合
+            if (priceData[material][quantity] && priceData[material][quantity][design]) {
+                return priceData[material][quantity][design][method];
+            }
+            
+            // 100枚未満の場合は100枚の単価を使用
+            if (quantity < 100) {
+                return priceData[material][100][design][method];
+            }
+            
+            // 10,000枚を超える場合は10,000枚の単価を使用
+            if (quantity > 10000) {
+                return priceData[material][10000][design][method];
+            }
+            
+            // 入力枚数より小さい定義済み枚数のうち、最も近いものを使用
+            let baseQty = 100;
+            for (let i = definedQuantities.length - 1; i >= 0; i--) {
+                if (definedQuantities[i] <= quantity) {
+                    baseQty = definedQuantities[i];
+                    break;
+                }
+            }
+            
+            return priceData[material][baseQty][design][method];
+        }
+        
         function calculate() {
             const material = document.getElementById('material').value;
-            const quantity = parseInt(document.getElementById('quantity').value);
+            let quantity = parseInt(document.getElementById('quantity').value);
             const design = parseInt(document.getElementById('design').value);
             const salePrice = parseInt(document.getElementById('salePrice').value) || 0;
             
-            let unitPrice, printingName;
-            
-            if (material === 'paper') {
-                unitPrice = priceData[material][quantity][design].ondemand;
-                printingName = 'オンデマンド';
-            } else {
-                unitPrice = priceData[material][quantity][design].offset;
-                printingName = 'オフセット';
+            // 枚数の検証
+            if (isNaN(quantity) || quantity < 100) {
+                quantity = 100;
+                document.getElementById('quantity').value = 100;
             }
             
+            const printingName = material === 'paper' ? 'オンデマンド' : 'オフセット';
+            const unitPrice = getUnitPrice(material, quantity, design);
             const baseTotal = unitPrice * quantity;
             
             document.getElementById('unitPrice').textContent = `¥${unitPrice.toLocaleString()}`;
@@ -1067,8 +1105,10 @@
             
             const profitPerUnit = salePrice - costPerUnit;
             const breakEven = profitPerUnit > 0 ? Math.ceil(finalTotal / profitPerUnit) : 0;
+            const breakEvenPercent = quantity > 0 ? ((breakEven / quantity) * 100).toFixed(1) : 0;
             
             document.getElementById('breakEven').textContent = `${breakEven.toLocaleString()}枚`;
+            document.getElementById('breakEvenPercent').textContent = `製造枚数の${breakEvenPercent}%`;
             document.getElementById('salePriceDisplay1').textContent = `¥${salePrice.toLocaleString()}`;
             document.getElementById('costPerUnit1').textContent = `¥${Math.round(costPerUnit).toLocaleString()}`;
             document.getElementById('profitPerUnit1').textContent = `¥${Math.round(profitPerUnit).toLocaleString()}`;
@@ -1104,7 +1144,7 @@
         }
         
         document.getElementById('material').addEventListener('change', calculate);
-        document.getElementById('quantity').addEventListener('change', calculate);
+        document.getElementById('quantity').addEventListener('input', calculate);
         document.getElementById('design').addEventListener('change', calculate);
         document.getElementById('salePrice').addEventListener('input', calculate);
         
