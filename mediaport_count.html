@@ -126,6 +126,17 @@
             margin-top: -4px;
         }
         
+        .input-error {
+            font-size: 0.85rem;
+            color: #d32f2f;
+            font-weight: 600;
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: #ffebee;
+            border-radius: 6px;
+            border-left: 3px solid #d32f2f;
+        }
+        
         label {
             font-size: 0.875rem;
             font-weight: 600;
@@ -343,7 +354,7 @@
         /* Profit Section */
         .profit-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
         
@@ -361,6 +372,47 @@
             transform: translateY(-4px);
         }
         
+        .profit-card-custom {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+            border-color: #ff9800;
+        }
+        
+        .profit-card-custom:hover {
+            border-color: #f57c00;
+        }
+        
+        .custom-input-group {
+            margin-bottom: 16px;
+        }
+        
+        .custom-input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .custom-input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-input-group input:focus {
+            outline: none;
+            border-color: #f57c00;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+        
         .profit-card h3 {
             font-size: 0.875rem;
             color: var(--text-secondary);
@@ -368,6 +420,15 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 700;
+        }
+        
+        .note-small {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: none;
+            letter-spacing: normal;
+            opacity: 0.8;
         }
         
         .profit-highlight {
@@ -685,7 +746,10 @@
                 
                 <div class="input-group">
                     <label>印刷枚数</label>
-                    <input type="number" id="quantity" value="100" min="100" step="100" placeholder="100枚以上">
+                    <input type="number" id="quantity" value="100" min="0" step="1" placeholder="100枚以上で入力">
+                    <div class="input-error" id="quantityError" style="display: none;">
+                        ⚠️ 100枚以上で入力してください
+                    </div>
                     <div class="input-hint">※ 100枚以上で入力してください</div>
                 </div>
                 
@@ -821,6 +885,7 @@
             </div>
             
             <div class="profit-grid">
+                <!-- 1行目 左: 損益分岐点 -->
                 <div class="profit-card">
                     <h3>損益分岐点</h3>
                     <div class="profit-highlight profit-positive" id="breakEven">0枚</div>
@@ -841,8 +906,40 @@
                     </div>
                 </div>
                 
+                <!-- 1行目 右: カスタムシミュレーション -->
+                <div class="profit-card profit-card-custom">
+                    <h3>カスタムシミュレーション</h3>
+                    <div class="custom-input-group">
+                        <label for="customSoldQty">実際に売れた枚数</label>
+                        <input type="number" id="customSoldQty" min="0" step="1" placeholder="枚数を入力">
+                        <div class="input-error" id="customSoldQtyError" style="display: none;">
+                            ⚠️ 製造枚数を超えています
+                        </div>
+                    </div>
+                    <div class="profit-highlight" id="profitCustom">¥0</div>
+                    <div class="profit-details">
+                        <div class="profit-detail-row">
+                            <span class="profit-detail-label">販売枚数</span>
+                            <span class="profit-detail-value" id="soldQuantityCustom">0枚</span>
+                        </div>
+                        <div class="profit-detail-row">
+                            <span class="profit-detail-label">売上高</span>
+                            <span class="profit-detail-value" id="revenueCustom">¥0</span>
+                        </div>
+                        <div class="profit-detail-row">
+                            <span class="profit-detail-label">製造原価</span>
+                            <span class="profit-detail-value" id="totalCostCustom">¥0</span>
+                        </div>
+                        <div class="profit-detail-row">
+                            <span class="profit-detail-label">利益率</span>
+                            <span class="profit-detail-value" id="profitRateCustom">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 2行目 左: 70%完売時の利益 -->
                 <div class="profit-card">
-                    <h3>70%完売時の利益</h3>
+                    <h3>70%完売時の利益 <span class="note-small">※Talkportにて販売時</span></h3>
                     <div class="profit-highlight" id="profit70">¥0</div>
                     <div class="profit-details">
                         <div class="profit-detail-row">
@@ -864,6 +961,7 @@
                     </div>
                 </div>
                 
+                <!-- 2行目 右: 100%完売時の利益 -->
                 <div class="profit-card">
                     <h3>100%完売時の利益</h3>
                     <div class="profit-highlight" id="profit100">¥0</div>
@@ -1060,10 +1158,26 @@
             const design = parseInt(document.getElementById('design').value);
             const salePrice = parseInt(document.getElementById('salePrice').value) || 0;
             
-            // 枚数の検証
-            if (isNaN(quantity) || quantity < 100) {
-                quantity = 100;
-                document.getElementById('quantity').value = 100;
+            const quantityInput = document.getElementById('quantity');
+            const quantityError = document.getElementById('quantityError');
+            
+            // 枚数の検証とエラー表示
+            if (isNaN(quantity) || quantity === 0) {
+                // 空欄または0の場合はエラーを表示しない
+                quantityError.style.display = 'none';
+                quantityInput.style.borderColor = '';
+                return;
+            }
+            
+            if (quantity < 100) {
+                // 100枚未満の場合はエラー表示
+                quantityError.style.display = 'block';
+                quantityInput.style.borderColor = '#d32f2f';
+                return;
+            } else {
+                // エラーをクリア
+                quantityError.style.display = 'none';
+                quantityInput.style.borderColor = '';
             }
             
             const printingName = material === 'paper' ? 'オンデマンド' : 'オフセット';
@@ -1141,12 +1255,77 @@
             const profit100Element = document.getElementById('profit100');
             profit100Element.textContent = `¥${profit100.toLocaleString()}`;
             profit100Element.className = profit100 >= 0 ? 'profit-highlight profit-positive' : 'profit-highlight profit-negative';
+            
+            // カスタムシミュレーション
+            calculateCustomSimulation(finalTotal, salePrice);
+        }
+        
+        function calculateCustomSimulation(totalCost, salePrice) {
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const customSoldQty = parseInt(document.getElementById('customSoldQty').value) || 0;
+            const customInput = document.getElementById('customSoldQty');
+            const customError = document.getElementById('customSoldQtyError');
+            
+            // 製造枚数をmax属性に設定
+            if (quantity > 0) {
+                customInput.setAttribute('max', quantity);
+            }
+            
+            if (customSoldQty === 0) {
+                // 枚数が0または未入力の場合
+                customError.style.display = 'none';
+                customInput.style.borderColor = '';
+                
+                document.getElementById('soldQuantityCustom').textContent = '0枚';
+                document.getElementById('revenueCustom').textContent = '¥0';
+                document.getElementById('totalCostCustom').textContent = '¥0';
+                document.getElementById('profitRateCustom').textContent = '0%';
+                
+                const profitCustomElement = document.getElementById('profitCustom');
+                profitCustomElement.textContent = '¥0';
+                profitCustomElement.className = 'profit-highlight';
+                return;
+            }
+            
+            // 製造枚数を超えているかチェック
+            if (customSoldQty > quantity) {
+                customError.style.display = 'block';
+                customInput.style.borderColor = '#d32f2f';
+                
+                // エラー状態でも計算は表示しない
+                document.getElementById('soldQuantityCustom').textContent = `${customSoldQty.toLocaleString()}枚`;
+                document.getElementById('revenueCustom').textContent = '—';
+                document.getElementById('totalCostCustom').textContent = '—';
+                document.getElementById('profitRateCustom').textContent = '—';
+                
+                const profitCustomElement = document.getElementById('profitCustom');
+                profitCustomElement.textContent = '—';
+                profitCustomElement.className = 'profit-highlight';
+                return;
+            } else {
+                customError.style.display = 'none';
+                customInput.style.borderColor = '';
+            }
+            
+            const revenueCustom = customSoldQty * salePrice;
+            const profitCustom = revenueCustom - totalCost;
+            const profitRateCustom = revenueCustom > 0 ? ((profitCustom / revenueCustom) * 100).toFixed(1) : 0;
+            
+            document.getElementById('soldQuantityCustom').textContent = `${customSoldQty.toLocaleString()}枚`;
+            document.getElementById('revenueCustom').textContent = `¥${revenueCustom.toLocaleString()}`;
+            document.getElementById('totalCostCustom').textContent = `¥${totalCost.toLocaleString()}`;
+            document.getElementById('profitRateCustom').textContent = `${profitRateCustom}%`;
+            
+            const profitCustomElement = document.getElementById('profitCustom');
+            profitCustomElement.textContent = `¥${profitCustom.toLocaleString()}`;
+            profitCustomElement.className = profitCustom >= 0 ? 'profit-highlight profit-positive' : 'profit-highlight profit-negative';
         }
         
         document.getElementById('material').addEventListener('change', calculate);
         document.getElementById('quantity').addEventListener('input', calculate);
         document.getElementById('design').addEventListener('change', calculate);
         document.getElementById('salePrice').addEventListener('input', calculate);
+        document.getElementById('customSoldQty').addEventListener('input', calculate);
         
         // 初期計算
         calculate();
