@@ -758,6 +758,10 @@
                     <select id="design">
                         <option value="1">1種類</option>
                         <option value="10" selected>2〜10種類</option>
+                        <option value="20">11〜20種類</option>
+                        <option value="30">21〜30種類</option>
+                        <option value="40">31〜40種類</option>
+                        <option value="50">41〜50種類</option>
                     </select>
                 </div>
                 
@@ -1084,23 +1088,28 @@
         
         function generatePriceTable() {
             const quantities = [100, 200, 300, 400, 500, 1000, 3000, 5000, 10000];
-            const designs = [1, 10];
+            const designs = [
+                {value: 1, label: '1種'},
+                {value: 10, label: '2-10種'},
+                {value: 20, label: '11-20種'},
+                {value: 30, label: '21-30種'},
+                {value: 40, label: '31-40種'},
+                {value: 50, label: '41-50種'}
+            ];
             const tbody = document.getElementById('priceTableBody');
             tbody.innerHTML = '';
             
             quantities.forEach(qty => {
                 designs.forEach(design => {
-                    const designText = design === 1 ? '1種' : '2-10種';
-                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="qty-cell">${qty.toLocaleString()}枚</td>
-                        <td class="design-cell">${designText}</td>
+                        <td class="design-cell">${design.label}</td>
                         <td class="method-cell">紙: オンデマンド<br>他: オフセット</td>
-                        ${generatePriceCell('paper', qty, design, 'ondemand')}
-                        ${generatePriceCell('pet', qty, design, 'offset')}
-                        ${generatePriceCell('pvc048', qty, design, 'offset')}
-                        ${generatePriceCell('pvc076', qty, design, 'offset')}
+                        ${generatePriceCell('paper', qty, design.value, 'ondemand')}
+                        ${generatePriceCell('pet', qty, design.value, 'offset')}
+                        ${generatePriceCell('pvc048', qty, design.value, 'offset')}
+                        ${generatePriceCell('pvc076', qty, design.value, 'offset')}
                     `;
                     tbody.appendChild(row);
                 });
@@ -1108,7 +1117,8 @@
         }
         
         function generatePriceCell(material, qty, design, method) {
-            const unitPrice = priceData[material][qty][design][method];
+            // getUnitPrice関数を使用して価格を計算（倍数計算を含む）
+            const unitPrice = getUnitPrice(material, qty, design);
             const totalPrice = unitPrice * qty;
             return `
                 <td class="price-cell clickable" onclick="selectCondition('${material}', ${qty}, ${design})">
@@ -1125,19 +1135,44 @@
             // 素材に応じた印刷方式を決定
             const method = material === 'paper' ? 'ondemand' : 'offset';
             
-            // 入力枚数が定義済みの枚数と一致する場合
-            if (priceData[material][quantity] && priceData[material][quantity][design]) {
-                return priceData[material][quantity][design][method];
+            // デザイン種類の倍率を計算
+            // 1種: そのまま, 2〜10種: 1倍, 11〜20種: 2倍, 21〜30種: 3倍, 31〜40種: 4倍, 41〜50種: 5倍
+            let designMultiplier = 1;
+            let baseDesign = 1;  // priceDataで参照するデザイン値
+            
+            if (design == 1) {
+                designMultiplier = 1;
+                baseDesign = 1;
+            } else if (design == 10) {
+                designMultiplier = 1;
+                baseDesign = 10;
+            } else if (design == 20) {
+                designMultiplier = 2;
+                baseDesign = 10;
+            } else if (design == 30) {
+                designMultiplier = 3;
+                baseDesign = 10;
+            } else if (design == 40) {
+                designMultiplier = 4;
+                baseDesign = 10;
+            } else if (design == 50) {
+                designMultiplier = 5;
+                baseDesign = 10;
             }
             
             // 100枚未満の場合は100枚の単価を使用
             if (quantity < 100) {
-                return priceData[material][100][design][method];
+                return priceData[material][100][baseDesign][method] * designMultiplier;
             }
             
             // 10,000枚を超える場合は10,000枚の単価を使用
             if (quantity > 10000) {
-                return priceData[material][10000][design][method];
+                return priceData[material][10000][baseDesign][method] * designMultiplier;
+            }
+            
+            // 入力枚数が定義済みの枚数と一致する場合
+            if (priceData[material][quantity] && priceData[material][quantity][baseDesign]) {
+                return priceData[material][quantity][baseDesign][method] * designMultiplier;
             }
             
             // 入力枚数より小さい定義済み枚数のうち、最も近いものを使用
@@ -1149,7 +1184,7 @@
                 }
             }
             
-            return priceData[material][baseQty][design][method];
+            return priceData[material][baseQty][baseDesign][method] * designMultiplier;
         }
         
         function calculate() {
